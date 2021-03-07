@@ -2588,6 +2588,90 @@ void kWeakestRows(vector<vector<int>>& mat, int k) {
     printVect(res);
 
 }
+
+int findMaxConsecutiveOnes(vector<int>& nums) {
+    int count = 0;
+    int max = 0;
+    for(int i = 0; i < nums.size(); i++) {
+        if(nums[i] == 0) {
+            count = 0;
+        } else {
+            count++;
+        }
+
+        if(count > max) {
+            max = count;
+        }
+    }
+
+    return max;
+}
+
+vector<int> sortedSquares(vector<int>& nums) {
+    vector<int> v1;
+    vector<int> v2;
+    vector<int> res;
+
+    int size = nums.size();
+
+    for(int i = 0; i < size; i++) {
+        if(nums[i] < 0) {
+            v1.push_back(nums[i]*nums[i]);
+        } else {
+            v2.push_back(nums[i]*nums[i]);
+        }
+    }
+
+    int i = v1.size()-1;
+    int j = 0;
+    while (i >= 0 && j < v2.size()) {
+        if(v1[i] < v2[j]) {
+            res.push_back(v1[i]);
+            i--;
+        } else {
+            res.push_back(v2[j]);
+            j++;
+        }
+    }
+
+    while (i >= 0) {
+        res.push_back(v1[i]);
+        i--;
+    }
+
+    while(j < v2.size()) {
+        res.push_back(v2[j]);
+        j++;
+    }
+
+    return res;    
+}
+
+int countDigit(long long n, vector<int>& digit){
+    int count = 0;
+    while (n != 0) 
+    {
+        digit.push_back(n%10);
+        n = n / 10;
+        ++count;
+    }
+    return count;
+}
+
+bool isPalindrome(int x) {
+    if(x < 0) {
+        return false;
+    }
+    vector<int> digit;
+    int size  = countDigit(x, digit);
+    for(int i = 0; i < size/2; i++) {
+        if(digit[i] != digit[size-1-i]) {
+            return false;
+        }
+    }
+
+     return true;
+}
 int main() {
     int size = 15;
     int arr[size] = { 7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1 };
@@ -2600,16 +2684,19 @@ int main() {
 
     vector<vector<int>> res2 = { {1, 1, 1}, {2, 2, 2}, {3, 3, 3} };
 
-    vector<int> vt = {};
+    vector<int> vt = {-7, -4, -3, -1, 0, 1, 2, 3, 3,4  ,5};
     vector<int> sd = { 9, 4, 9, 8, 4 };
     vector<int> rs;
     vector<vector<int>> ct = { {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0}, {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}, {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}, {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0} };
 
     string s = "1212343";
     printVect(vt);
-    cout << findLHS(vt) << endl;
+    // cout << findLHS(vt) << endl;
 
-    kWeakestRows(ct, 7);
+    cout <<  "h s " << isPalindrome(1231) << "hey";
+    // sortedSquares(vt);
+    // cout << findMaxConsecutiveOnes(vt) << endl;
+    // kWeakestRows(ct, 7);
     // cout << shortestPathBinaryMatrix(ct);
     // cout <<numberOfSteps(121) << endl;
     // findErrorNums(vt);

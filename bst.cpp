@@ -52,6 +52,7 @@ public:
     Node *trimBst(Node *root, int low, int high);
     void rightSideView(Node *root);
     Node *convertBSTtoGT(Node *root);
+    vector<double> averageOfLevels(Node *root);
 };
 
 Node *BST::createNode(int data) {
@@ -326,8 +327,7 @@ Node *BST::lca(int n1, int n2) {
     
 }
 
-int BST::countLeafNodes(Node *temp) 
-{
+int BST::countLeafNodes(Node *temp) {
     if(temp == NULL) {
         return 0;
     }
@@ -764,7 +764,45 @@ void rightSideView(Node* root, int level) {
     rightSideView(root->left, level);
 }
 
+vector<double> BST::averageOfLevels(Node* root) {
+    // [2147483647,2147483647,2147483647]
+    vector<double> res;
+    Node *tt = root;
+    
+    queue<Node *> q;
+    q.push(tt);
+    long int c1 = 0;
+    long int c2 = 1;
+    long int sum = 0;
+    long int count = 1;
+    while(!q.empty()) {
+        tt = q.front();
+        q.pop();
+        sum += tt->data;
+        c2--;
 
+        if(tt->left != NULL) {
+            q.push(tt->left);
+            c1++;
+        } 
+        if(tt->right != NULL) {
+            q.push(tt->right);
+            c1++;
+        }
+
+        if(c2 == 0) {
+            cout << count << " " << sum << endl;
+            double temp = float(sum)/float(count);
+            res.push_back(temp);
+            c2 = c1;
+            count = c1;
+            c1 = 0;
+            sum = 0;
+        }
+    }
+
+    return res;
+}
 
 int main()
 {
@@ -781,10 +819,9 @@ int main()
     }
 
     bt1.levelOrderTraversal();
+    bt1.averageOfLevels(bt1.root);
     // rightSideView(bt1.root, 1);
-    bt1.convertBSTtoGT(bt1.root);
-    // bt1.levelOrderTraversal();
-    bt1.levelOrderTraversal();
+    // bt1.convertBSTtoGT(bt1.root);
 
     // Node * asq = bt1.trimBst(bt1.root, 0, 3);
     // levelOrderTemp(asq);

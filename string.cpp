@@ -461,6 +461,45 @@ vector<string> letterCasePermutation(string S) {
     return res;
 }
 
+bool dsa(string st, string target) {
+    int t = 0;
+    int len = st.length();
+    int i = st.length() - 1;
+    int j = target.length() - 1;
+    // Iterate from 0 to len - 1
+    while(j >= 0) {
+        if(st[i] == target[j]) {
+            i--;
+            j--;
+        } else {
+            break;
+        }
+    }
+
+    return j == -1;
+}
+
+bool cmpString(string a, string b) {
+    return a.length() > b.length();
+}
+
+int minimumLengthEncoding(vector<string>& words) {
+        string str = "";
+        sort(words.begin(), words.end(), [](string& a, string& b){return a.size() > b.size();});
+        for(int i = 0; i < words.size(); i++) {
+            cout << words[i] << " ";
+
+        }
+        cout << endl;
+        for (string word : words) {
+            int found = str.find(word);
+            if (found == string::npos || str[found + word.size()] != '#') {
+                str += word + "#";
+            }
+        }
+        return str.size();
+    }
+
 int main()
 {
 
@@ -478,10 +517,12 @@ int main()
     // string ruleKey = "type";
     // string ruleValue = "phone";
     // cout << countMatches(items, ruleKey, ruleValue) << endl;
-    vector<string> vt = { "hello","world","leetcode" };
+    vector<string> vt = {"time", "me", "ime", "bell", "be" , "ell" };
     string parenthesis = "()(((()())(";
     string cha = "a1b4";
-    letterCasePermutation(cha);
+
+    cout << minimumLengthEncoding(vt) << endl;;
+    // letterCasePermutation(cha);
     // cout << "parenthieses: " << longestValidParenthesisStack(parenthesis) << endl;
     // cout << countCharacters(vt, cha) << endl;
 
