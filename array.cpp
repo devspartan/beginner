@@ -39,18 +39,14 @@ vector<int> unionOfSortedArrays(int arr1[], int arr2[], int size1, int size2) {
 
         if (arr1[i] == arr1[i - 1]) {
             i++;
-        }
-        else if (arr2[j] == arr2[j - 1]) {
+        } else if (arr2[j] == arr2[j - 1]) {
             j++;
-        }
-        else if (arr1[i] == arr2[j]) {
+        } else if (arr1[i] == arr2[j]) {
             j++;
-        }
-        else if (arr1[i] < arr2[j]) {
+        } else if (arr1[i] < arr2[j]) {
             res.push_back(arr1[i]);
             i++;
-        }
-        else if (arr1[i] > arr2[j]) {
+        } else if (arr1[i] > arr2[j]) {
             res.push_back(arr2[j]);
             j++;
         }
@@ -62,8 +58,7 @@ vector<int> unionOfSortedArrays(int arr1[], int arr2[], int size1, int size2) {
         while (j < size2) {
             if (arr2[j] == arr2[j - 1]) {
                 j++;
-            }
-            else {
+            } else {
                 res.push_back(arr2[j]);
                 j++;
             }
@@ -73,8 +68,7 @@ vector<int> unionOfSortedArrays(int arr1[], int arr2[], int size1, int size2) {
         while (i < size1) {
             if (arr1[i] == arr1[i - 1]) {
                 i++;
-            }
-            else {
+            } else {
                 res.push_back(arr1[i]);
                 i++;
             }
@@ -89,7 +83,7 @@ vector<int> unionOfSortedArrays(int arr1[], int arr2[], int size1, int size2) {
 }
 
 vector<int> intersectionOfSortedArrays(int arr1[], int arr2[], int size1,
-    int size2) {
+                                       int size2) {
     int i = 0, j = 0;
     vector<int> res;
 
@@ -102,11 +96,9 @@ vector<int> intersectionOfSortedArrays(int arr1[], int arr2[], int size1,
             res.push_back(arr1[i]);
             i++;
             j++;
-        }
-        else if (arr1[i] < arr2[j]) {
+        } else if (arr1[i] < arr2[j]) {
             i++;
-        }
-        else if (arr1[i] > arr2[j]) {
+        } else if (arr1[i] > arr2[j]) {
             j++;
         }
     }
@@ -151,21 +143,17 @@ int minDistanceBetwTwoNum(int arr[], int size, int x, int y) {
     for (int i = 0; i < size; i++) {
         if ((arr[i] == x || arr[i] == y) && temp == -1) {
             temp = i;
-        }
-        else if (arr[i] == x && arr[temp] == x) {
+        } else if (arr[i] == x && arr[temp] == x) {
             temp = i;
-        }
-        else if (arr[i] == x && arr[temp] == y) {
+        } else if (arr[i] == x && arr[temp] == y) {
             int num = i - temp;
             temp = i;
             if (num < minDis) {
                 minDis = num;
             }
-        }
-        else if (arr[i] == y && arr[temp] == y) {
+        } else if (arr[i] == y && arr[temp] == y) {
             temp = i;
-        }
-        else if (arr[i] == y && arr[temp] == x) {
+        } else if (arr[i] == y && arr[temp] == x) {
             int num = i - temp;
             temp = i;
             if (num < minDis) {
@@ -196,8 +184,7 @@ int majorityElement(int arr[], int size) {
     for (int i = 0; i < size; i++) {
         if (arr[idx] == arr[i]) {
             count++;
-        }
-        else {
+        } else {
             count--;
         }
 
@@ -256,8 +243,7 @@ int fixedPoint(int arr[], int size, int start, int end) {
 
     if (arr[start] == start) {
         return start;
-    }
-    else if (start == end) {
+    } else if (start == end) {
         cout << "NO FIXED POINT" << endl;
         exit(EXIT_FAILURE);
     }
@@ -265,11 +251,9 @@ int fixedPoint(int arr[], int size, int start, int end) {
     int mid = (start + end) / 2;
     if (arr[mid] == mid) {
         return mid;
-    }
-    else if (arr[mid] < mid) {
+    } else if (arr[mid] < mid) {
         return fixedPoint(arr, size, mid + 1, end);
-    }
-    else if (arr[mid] > mid) {
+    } else if (arr[mid] > mid) {
         return fixedPoint(arr, size, start, mid);
     }
 
@@ -282,39 +266,31 @@ int peakElement(int arr[], int size, int start, int end) {
 
     if (mid == 0 && arr[0] >= arr[1]) {
         return arr[0];
-    }
-    else if (mid == size - 1 && arr[mid] >= arr[mid - 1]) {
+    } else if (mid == size - 1 && arr[mid] >= arr[mid - 1]) {
         return arr[size - 1];
-    }
-    else if (arr[mid] < arr[mid - 1]) {
+    } else if (arr[mid] < arr[mid - 1]) {
         return peakElement(arr, size, start, mid);
-    }
-    else if (arr[mid] < arr[mid + 1]) {
+    } else if (arr[mid] < arr[mid + 1]) {
         return peakElement(arr, size, mid + 1, end);
-    }
-    else {
+    } else {
         return arr[mid];
     }
 }
 
-int peakIndexInMountainArray(vector<int>& arr, int start, int end) {
+int peakIndexInMountainArray(vector<int> &arr, int start, int end) {
     int size = arr.size();
 
     int mid = (start + end) / 2;
 
     if (mid == 0 && arr[0] > arr[1]) {
         return mid;
-    }
-    else if (mid == size - 1 && arr[mid] > arr[mid - 1]) {
+    } else if (mid == size - 1 && arr[mid] > arr[mid - 1]) {
         return mid;
-    }
-    else if (arr[mid] > arr[mid + 1] && arr[mid] > arr[mid - 1]) {
+    } else if (arr[mid] > arr[mid + 1] && arr[mid] > arr[mid - 1]) {
         return mid;
-    }
-    else if (arr[mid] > arr[mid + 1]) {
+    } else if (arr[mid] > arr[mid + 1]) {
         return peakIndexInMountainArray(arr, start, mid);
-    }
-    else if (arr[mid] < arr[mid + 1]) {
+    } else if (arr[mid] < arr[mid + 1]) {
         return peakIndexInMountainArray(arr, mid + 1, end);
     }
 
@@ -330,8 +306,7 @@ int countIncreasingSubarrs(int arr[], int size) {
         if (arr[i] > maxel) {
             maxel = arr[i];
             maxlen++;
-        }
-        else {
+        } else {
             maxlen--;
             count += (maxlen * (maxlen + 1)) / 2;
             cout << count << endl;
@@ -365,11 +340,9 @@ bool pythagoresTriplet(int arr[], int size) {
 
             if (a < b + c) {
                 ci--;
-            }
-            else if (a > b + c) {
+            } else if (a > b + c) {
                 bi++;
-            }
-            else if (a == (b + c)) {
+            } else if (a == (b + c)) {
                 return true;
             }
         }
@@ -383,7 +356,7 @@ void swap(int arr[], int i, int j) {
     arr[j] = temp;
 }
 
-void swap(vector<int>& arr, int i, int j) {
+void swap(vector<int> &arr, int i, int j) {
     int temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
@@ -413,8 +386,7 @@ void printRepitingEl(int arr[], int size) {
     for (int i = 0; i < size; i++) {
         if (arr[abs(arr[i])] < 0) {
             cout << abs(arr[i]) << " ";
-        }
-        else {
+        } else {
             arr[abs(arr[i])] = -arr[abs(arr[i])];
         }
     }
@@ -422,22 +394,20 @@ void printRepitingEl(int arr[], int size) {
 
 int bitonicSubarray(int arr[], int size) {
     // maxlen of increasing then decreasing subarray
-    int inclr[size] = { 1 };
-    int incrl[size] = { 1 };
+    int inclr[size] = {1};
+    int incrl[size] = {1};
     int count = 1;
     for (int i = 1; i < size; i++) {
         if (arr[i - 1] <= arr[i]) {
             incrl[i] = incrl[i - 1] + 1;
-        }
-        else {
+        } else {
             incrl[i] = 1;
         }
     }
     for (int i = size - 2; i >= 0; i--) {
         if (arr[i] >= arr[i + 1]) {
             inclr[i] = inclr[i + 1] + 1;
-        }
-        else {
+        } else {
             inclr[i] = 1;
         }
     }
@@ -463,13 +433,11 @@ int mergeOperation(int arr[], int size) {
         if (arr[i] == arr[j]) {
             i++;
             j--;
-        }
-        else if (arr[i] < arr[j]) {
+        } else if (arr[i] < arr[j]) {
             operations++;
             i++;
             arr[i] += arr[i - 1];
-        }
-        else if (arr[i] > arr[j]) {
+        } else if (arr[i] > arr[j]) {
             operations++;
             j--;
             arr[j] += arr[j + 1];
@@ -536,11 +504,10 @@ float medianOfTwoSortedArr(vector<int> arr, vector<int> arr2) {
 
     if (size == 0) {
         return size2 % 2 == 1 ? arr2[size2 / 2]
-            : (arr2[size2 / 2] + arr2[size2 / 2 - 1]) / 2.0;
-    }
-    else if (size2 == 0) {
+                              : (arr2[size2 / 2] + arr2[size2 / 2 - 1]) / 2.0;
+    } else if (size2 == 0) {
         return size % 2 == 1 ? arr[size / 2]
-            : (arr[size / 2] + arr[size / 2 - 1]) / 2.0;
+                             : (arr[size / 2] + arr[size / 2 - 1]) / 2.0;
     }
 
     int totalLength = size + size2;
@@ -558,20 +525,17 @@ float medianOfTwoSortedArr(vector<int> arr, vector<int> arr2) {
         int minRightY = j == size2 ? INT32_MAX : arr2[j];
 
         cout << "Im in " << maxLeftX << " " << minRightX << " " << maxLeftY
-            << " " << minRightY << endl;
+             << " " << minRightY << endl;
         if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
             if ((size + size2) % 2 == 0) {
                 return (max(maxLeftX, maxLeftY) + min(minRightX, minRightY)) /
-                    2.0;
-            }
-            else {
+                       2.0;
+            } else {
                 return max(maxLeftX, maxLeftY);
             }
-        }
-        else if (maxLeftY > minRightX) {
+        } else if (maxLeftY > minRightX) {
             low = i + 1;
-        }
-        else if (maxLeftX > minRightY) {
+        } else if (maxLeftX > minRightY) {
             high = i - 1;
         }
     }
@@ -579,7 +543,7 @@ float medianOfTwoSortedArr(vector<int> arr, vector<int> arr2) {
     return 0;
 }
 
-double mediantt(vector<int>& arr1, vector<int>& arr2) {
+double mediantt(vector<int> &arr1, vector<int> &arr2) {
     int s1 = arr1.size();
     int s2 = arr2.size();
     int i = 0, j = 0;
@@ -609,10 +573,10 @@ double mediantt(vector<int>& arr1, vector<int>& arr2) {
     printVect(result);
     cout << result[temp / 2] << "  " << result[temp / 2 - 1] << endl;
     return temp % 2 == 0 ? (result[temp / 2] + result[temp / 2 - 1]) / 2.0
-        : result[temp / 2];
+                         : result[temp / 2];
 }
 
-vector<vector<int>> threeSum(vector<int>& nums) {
+vector<vector<int>> threeSum(vector<int> &nums) {
     sort(nums.begin(), nums.end());
 
     int a, b, c;
@@ -649,8 +613,7 @@ vector<vector<int>> threeSum(vector<int>& nums) {
 
             else if (nums[i] + nums[j] + nums[k] > 0) {
                 k--;
-            }
-            else if (nums[i] + nums[j] + nums[k] < 0) {
+            } else if (nums[i] + nums[j] + nums[k] < 0) {
                 j++;
             }
         }
@@ -672,7 +635,7 @@ vector<vector<int>> threeSum(vector<int>& nums) {
     return ans;
 }
 
-vector<vector<int>> fourSum(vector<int>& nums, int target) {
+vector<vector<int>> fourSum(vector<int> &nums, int target) {
     sort(nums.begin(), nums.end());
 
     int a, b, c;
@@ -701,8 +664,7 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
 
                 else if (tempSum > target) {
                     k--;
-                }
-                else if (tempSum < target) {
+                } else if (tempSum < target) {
                     j++;
                 }
             }
@@ -725,7 +687,7 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
     return ans;
 }
 
-int threeSumClosest(vector<int>& nums, int target) {
+int threeSumClosest(vector<int> &nums, int target) {
 
     sort(nums.begin(), nums.end());
 
@@ -750,11 +712,9 @@ int threeSumClosest(vector<int>& nums, int target) {
 
             if (tempDiff == 0) {
                 return tempSum;
-            }
-            else if (tempDiff > 0) {
+            } else if (tempDiff > 0) {
                 k--;
-            }
-            else if (tempDiff < 0) {
+            } else if (tempDiff < 0) {
                 j++;
             }
 
@@ -765,7 +725,7 @@ int threeSumClosest(vector<int>& nums, int target) {
     return sum;
 }
 
-int removeDuplicates(vector<int>& nums) {
+int removeDuplicates(vector<int> &nums) {
     // returns final length after romoval of duplicates
     int size = nums.size();
     if (size == 0) {
@@ -780,8 +740,7 @@ int removeDuplicates(vector<int>& nums) {
 
         if (nums[nxt] <= nums[curr]) {
             nxt++;
-        }
-        else {
+        } else {
             swap(nums, prev, nxt);
             prev++;
             curr++;
@@ -792,7 +751,7 @@ int removeDuplicates(vector<int>& nums) {
     return prev;
 }
 
-int removeElement(vector<int>& nums, int val) {
+int removeElement(vector<int> &nums, int val) {
     // removes all the instances of val and returns len
 
     int size = nums.size();
@@ -807,8 +766,7 @@ int removeElement(vector<int>& nums, int val) {
         if (nums[curr] == val) {
             swap(nums, curr, nums.size() - 1);
             nums.pop_back();
-        }
-        else {
+        } else {
             curr++;
         }
     }
@@ -856,7 +814,7 @@ int binarySearch2(vector<int> arr, int l, int r, int x) {
     return -1;
 }
 
-int searchElinRotatedArr(vector<int>& nums, int target) {
+int searchElinRotatedArr(vector<int> &nums, int target) {
 
     int size = nums.size();
     int pivot = size;
@@ -872,54 +830,46 @@ int searchElinRotatedArr(vector<int>& nums, int target) {
 
     if (target >= nums[0] && target <= nums[pivot - 1]) {
         index = binarySearch(nums, 0, pivot, target);
-    }
-    else {
+    } else {
         index = binarySearch(nums, pivot, size, target);
     }
 
     return index;
 }
 
-int firstOccurenceBS(vector<int>& arr, int start, int end, int target) {
+int firstOccurenceBS(vector<int> &arr, int start, int end, int target) {
     if (start <= end) {
 
         int mid = (start + end) / 2;
 
         if (mid == 0 && arr[mid] == target) {
             return mid;
-        }
-        else if (arr[mid] == target && arr[mid - 1] < target) {
+        } else if (arr[mid] == target && arr[mid - 1] < target) {
             return mid;
-        }
-        else if (target > arr[mid]) {
+        } else if (target > arr[mid]) {
             return firstOccurenceBS(arr, mid + 1, end, target);
-        }
-        else {
+        } else {
             return firstOccurenceBS(arr, start, mid - 1, target);
         }
     }
     return -1;
 }
 
-int lastOccurenceBS(vector<int>& arr, int start, int end, int target) {
+int lastOccurenceBS(vector<int> &arr, int start, int end, int target) {
 
     if (start <= end) {
         int mid = (start + end) / 2;
 
         if (mid == arr.size() - 1 && arr[mid] == target) {
             return mid;
-        }
-        else if (arr[mid] == target && arr[mid + 1] > target) {
+        } else if (arr[mid] == target && arr[mid + 1] > target) {
             return mid;
-        }
-        else if (arr[mid] > target) {
+        } else if (arr[mid] > target) {
             return lastOccurenceBS(arr, start, mid - 1, target);
-        }
-        else {
+        } else {
             return lastOccurenceBS(arr, mid + 1, end, target);
         }
-    }
-    else {
+    } else {
         return -1;
     }
 }
@@ -944,12 +894,12 @@ int maxSumSubarray(vector<int> arr) {
     return maxSum;
 }
 
-int** dp;
+int **dp;
 
-void printComb(vector<int> arr, vector<int>& res, int target, int i,
-    set<vector<int>>& st) {
+void printComb(vector<int> arr, vector<int> &res, int target, int i,
+               set<vector<int>> &st) {
     cout << "target: " << target << " "
-        << "idx " << i << endl;
+         << "idx " << i << endl;
     if (i == 0 && target != 0 && dp[i][target]) {
         cout << "first if \n";
         res.push_back(arr[i]);
@@ -990,7 +940,7 @@ void printComb(vector<int> arr, vector<int>& res, int target, int i,
 
 int uniquePaths(int m, int n) {
 
-    int** arr = new int* [m];
+    int **arr = new int *[m];
     for (int i = 0; i < m; i++) {
         arr[i] = new int[n];
     }
@@ -1017,7 +967,7 @@ int uniquePaths(int m, int n) {
     return arr[m - 1][n - 1];
 }
 
-int uniquePathsWithObstacles(vector<vector<int>>& arr) {
+int uniquePathsWithObstacles(vector<vector<int>> &arr) {
 
     if (arr[0][0] == 1) {
         return 0;
@@ -1029,8 +979,7 @@ int uniquePathsWithObstacles(vector<vector<int>>& arr) {
     for (int i = 0; i < m; i++) {
         if (arr[i][0] == 0 && !downBlocked) {
             arr[i][0] = 1;
-        }
-        else if (arr[i][0] == 1) {
+        } else if (arr[i][0] == 1) {
             arr[i][0] = 0;
             downBlocked = true;
         }
@@ -1038,8 +987,7 @@ int uniquePathsWithObstacles(vector<vector<int>>& arr) {
     for (int j = 1; j < n; j++) {
         if (arr[0][j] == 0 && !rtBlocked) {
             arr[0][j] = 1;
-        }
-        else if (arr[0][j] == 1) {
+        } else if (arr[0][j] == 1) {
             arr[0][j] = 0;
             rtBlocked = true;
         }
@@ -1061,7 +1009,7 @@ int uniquePathsWithObstacles(vector<vector<int>>& arr) {
     return arr[m - 1][n - 1];
 }
 
-int minPathSum(vector<vector<int>>& arr) {
+int minPathSum(vector<vector<int>> &arr) {
     // given a 2d matrix return the minimum sum possible top-left to
     // bottom-right
     int m = arr.size();
@@ -1082,7 +1030,7 @@ int minPathSum(vector<vector<int>>& arr) {
     return arr[m - 1][n - 1];
 }
 
-int dpStairs[100000] = { 0 };
+int dpStairs[100000] = {0};
 
 int climbStairs(int n) {
     // given n number of stairs you can take 1 step or 2 return in how many ways
@@ -1102,7 +1050,7 @@ int climbStairs(int n) {
     return temp;
 }
 
-int maxRectAreaHistogram(vector<int>& hist) {
+int maxRectAreaHistogram(vector<int> &hist) {
     stack<int> st;
     stack<int> idx;
     int size = hist.size();
@@ -1112,8 +1060,7 @@ int maxRectAreaHistogram(vector<int>& hist) {
 
         if (st.empty() || hist[st.top()] <= hist[i]) {
             st.push(i++);
-        }
-        else {
+        } else {
             int tp = st.top();
             st.pop();
             int area = hist[tp] * (st.empty() ? i : (i - st.top() - 1));
@@ -1134,7 +1081,7 @@ int maxRectAreaHistogram(vector<int>& hist) {
     return maxArea;
 }
 
-int maximalRectangle(vector<vector<char>>& matrix) {
+int maximalRectangle(vector<vector<char>> &matrix) {
     // returns max possible area of rect of 1's
 
     int m = matrix.size();
@@ -1168,7 +1115,7 @@ int maximalRectangle(vector<vector<char>>& matrix) {
     return maxArea;
 }
 
-int numDecodings(string arr, vector<int>& dpVect, int i) {
+int numDecodings(string arr, vector<int> &dpVect, int i) {
     // given a array of numbers, reuturn count of ways the arrat can be
     // decoded back to alphabets acc to mapping A - 1, Z - 26
     // i = 0;
@@ -1231,7 +1178,7 @@ vector<int> nextMin(vector<int> arr) {
     return res;
 }
 
-int minimumTotal(vector<vector<int>>& triangle) {
+int minimumTotal(vector<vector<int>> &triangle) {
     // given a traingle like bt shape find min path sum from top to bottom
     // you can go down and adjacent element down to it;
 
@@ -1248,8 +1195,7 @@ int minimumTotal(vector<vector<int>>& triangle) {
         for (int j = 0; j < triangle[i].size(); j++) {
             if (i == m - 1) {
                 dp[i].push_back(triangle[i][j]);
-            }
-            else {
+            } else {
                 int tempMin = min(dp[i + 1][j], dp[i + 1][j + 1]);
                 dp[i].push_back(tempMin + triangle[i][j]);
             }
@@ -1270,7 +1216,7 @@ int minimumTotal(vector<vector<int>>& triangle) {
     return dp[0][0];
 }
 
-int maxProfit(vector<int>& prices) {
+int maxProfit(vector<int> &prices) {
     // best time to buy and sell stock
 
     int size = prices.size();
@@ -1296,7 +1242,7 @@ int maxProfit(vector<int>& prices) {
     return maxprofit;
 }
 
-int maxProfit2Rec(vector<int>& arr, int s) {
+int maxProfit2Rec(vector<int> &arr, int s) {
     // buy and sell stock 1 transaction at one day
     int size = arr.size();
 
@@ -1325,7 +1271,7 @@ int maxProfit2Rec(vector<int>& arr, int s) {
     return maxPr;
 }
 
-int maxProfit2(vector<int>& arr) {
+int maxProfit2(vector<int> &arr) {
     int size = arr.size();
 
     if (size == 1) {
@@ -1342,7 +1288,7 @@ int maxProfit2(vector<int>& arr) {
     return pt;
 }
 
-int maxProfit3(vector<int>& prices) {
+int maxProfit3(vector<int> &prices) {
     // buy and sell stock 3
     int size = prices.size();
     if (size == 0) {
@@ -1392,7 +1338,7 @@ int maxProfit3(vector<int>& prices) {
     return (mx1 + mx2);
 }
 
-int maxProductSubarray(vector<int>& arr) {
+int maxProductSubarray(vector<int> &arr) {
     int size = arr.size();
     if (size == 0) {
         return 0;
@@ -1418,7 +1364,7 @@ int maxProductSubarray(vector<int>& arr) {
     return maximum;
 }
 
-int calculateMinimumHP(vector<vector<int>>& arr) {
+int calculateMinimumHP(vector<vector<int>> &arr) {
     // given a 2d array return minimum energy required to get right bottom from
     // top left
 
@@ -1437,13 +1383,12 @@ int calculateMinimumHP(vector<vector<int>>& arr) {
     if (m == 1 && n == 1) {
         if (arr[0][0] > 0) {
             return 1;
-        }
-        else {
+        } else {
             return 0 - arr[0][0] + 1;
         }
     }
 
-    int** dp = new int* [m];
+    int **dp = new int *[m];
     for (int i = 0; i < m; i++) {
         dp[i] = new int[n];
 
@@ -1480,14 +1425,12 @@ int calculateMinimumHP(vector<vector<int>>& arr) {
             if (arr[i - 1][j] < arr[i][j - 1]) {
                 arr[i][j] += arr[i][j - 1];
                 dp[i][j] = arr[i][j] > 0 ? dp[i][j - 1]
-                    : max(dp[i][j - 1], 0 - arr[i][j] + 1);
-            }
-            else if (arr[i - 1][j] > arr[i][j - 1]) {
+                                         : max(dp[i][j - 1], 0 - arr[i][j] + 1);
+            } else if (arr[i - 1][j] > arr[i][j - 1]) {
                 arr[i][j] += arr[i - 1][j];
                 dp[i][j] = arr[i][j] > 0 ? dp[i - 1][j]
-                    : max(dp[i - 1][j], 0 - arr[i][j] + 1);
-            }
-            else {
+                                         : max(dp[i - 1][j], 0 - arr[i][j] + 1);
+            } else {
                 arr[i][j] += arr[i - 1][j];
                 dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]);
             }
@@ -1512,8 +1455,7 @@ int calculateMinimumHP(vector<vector<int>>& arr) {
             if (d1 < d2) {
                 dp[i][j] = d1;
                 arr2[i][j] += arr2[i - 1][j];
-            }
-            else {
+            } else {
                 dp[i][j] = d2;
                 arr2[i][j] += arr2[i][j - 1];
             }
@@ -1530,7 +1472,7 @@ int calculateMinimumHP(vector<vector<int>>& arr) {
     return min(res1, dp[m - 1][n - 1]);
 }
 
-int findShortestSubArray(vector<int>& arr) {
+int findShortestSubArray(vector<int> &arr) {
     // findShortestSubarray having same degree(max freq of a num)
     int size = arr.size();
     int hashSize = 0;
@@ -1585,7 +1527,7 @@ int binarySearch3(vector<int> arr, int start, int end, int x) {
     return start;
 }
 
-int triangleNumber(vector<int>& arr) {
+int triangleNumber(vector<int> &arr) {
     // return number of possible traigles can be made using arr el as edge
 
     int size = arr.size();
@@ -1601,8 +1543,7 @@ int triangleNumber(vector<int>& arr) {
                 // cout << arr[i] << " " << arr[j] << " " << arr[k] << endl;
                 if (arr[i] + arr[j] <= arr[k]) {
                     break;
-                }
-                else {
+                } else {
                     count++;
                     // cout << "in count\n";
                 }
@@ -1612,7 +1553,7 @@ int triangleNumber(vector<int>& arr) {
     return count;
 }
 
-vector<string> summaryRanges(vector<int>& arr) {
+vector<string> summaryRanges(vector<int> &arr) {
     int size = arr.size();
 
     int st = arr[0];
@@ -1626,8 +1567,7 @@ vector<string> summaryRanges(vector<int>& arr) {
                 tempSt += to_string(st);
                 res.push_back(tempSt);
                 tempSt = "";
-            }
-            else {
+            } else {
                 tempSt += to_string(st);
                 tempSt += "->";
                 tempSt += to_string(arr[i - 1]);
@@ -1641,8 +1581,7 @@ vector<string> summaryRanges(vector<int>& arr) {
         tempSt += to_string(st);
         res.push_back(tempSt);
         tempSt = "";
-    }
-    else {
+    } else {
         tempSt += to_string(st);
         tempSt += "->";
         tempSt += to_string(arr[size - 1]);
@@ -1653,7 +1592,7 @@ vector<string> summaryRanges(vector<int>& arr) {
     return res;
 }
 
-vector<int> finalPrices(vector<int>& arr) {
+vector<int> finalPrices(vector<int> &arr) {
     int size = arr.size();
     if (size == 0) {
         return arr;
@@ -1672,7 +1611,7 @@ vector<int> finalPrices(vector<int>& arr) {
     return arr;
 }
 
-int maxWidthRamp(vector<int>& arr) {
+int maxWidthRamp(vector<int> &arr) {
     int size = arr.size();
 
     if (size == 0) {
@@ -1710,8 +1649,7 @@ bool isPerfectCube(int N) {
 
     if (cube_root * cube_root * cube_root == N) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -1740,7 +1678,7 @@ bool isPrime(int n) {
     return true;
 }
 
-int recc(vector<vector<int>>& dp, int i, int j, int ip, int jp) {
+int recc(vector<vector<int>> &dp, int i, int j, int ip, int jp) {
 
     if (i >= 10 || j >= 10 || i < 0 || j < 0) {
         return 0;
@@ -1815,7 +1753,7 @@ int inMaze(int x, int y) {
     return dp[x][y];
 }
 
-vector<int> twoSum(vector<int>& nums, int target) {
+vector<int> twoSum(vector<int> &nums, int target) {
 
     int size = nums.size();
     vector<pair<int, int>> pair;
@@ -1831,11 +1769,9 @@ vector<int> twoSum(vector<int>& nums, int target) {
         int temp = pair[i].first + pair[j].first;
         if (temp < target) {
             i++;
-        }
-        else if (temp > target) {
+        } else if (temp > target) {
             j--;
-        }
-        else {
+        } else {
             vector<int> index;
             index.push_back(pair[i].second);
             index.push_back(pair[j].second);
@@ -1845,7 +1781,7 @@ vector<int> twoSum(vector<int>& nums, int target) {
     }
 }
 
-int maxArea(vector<int>& arr) {
+int maxArea(vector<int> &arr) {
     int size = arr.size();
 
     int maxArea = 0;
@@ -1858,8 +1794,7 @@ int maxArea(vector<int>& arr) {
         maxArea = tempArea > maxArea ? tempArea : maxArea;
         if (arr[i] > arr[j]) {
             j--;
-        }
-        else {
+        } else {
             i++;
         }
     }
@@ -1867,8 +1802,8 @@ int maxArea(vector<int>& arr) {
     return maxArea;
 }
 
-void combinationSumUtil(vector<int>& arr, int target, int i, vector<int>& rs,
-    vector<vector<int>>& result) {
+void combinationSumUtil(vector<int> &arr, int target, int i, vector<int> &rs,
+                        vector<vector<int>> &result) {
     if (target == 0) {
         result.push_back(rs);
     }
@@ -1885,7 +1820,7 @@ void combinationSumUtil(vector<int>& arr, int target, int i, vector<int>& rs,
     }
 }
 
-vector<vector<int>> combinationSum(vector<int>& arr, int target) {
+vector<vector<int>> combinationSum(vector<int> &arr, int target) {
     vector<vector<int>> result;
     vector<int> tempRs;
     combinationSumUtil(arr, target, 0, tempRs, result);
@@ -1895,7 +1830,7 @@ vector<vector<int>> combinationSum(vector<int>& arr, int target) {
 vector<vector<int>> combinationSum2(vector<int> arr, int target) {
     // return subsets having sum equal to target;
     int size = arr.size();
-    dp = new int* [size];
+    dp = new int *[size];
 
     for (int i = 0; i < size; i++) {
         dp[i] = new int[target + 1];
@@ -1914,7 +1849,7 @@ vector<vector<int>> combinationSum2(vector<int> arr, int target) {
     for (int i = 1; i < size; i++) {
         for (int j = 0; j < target + 1; j++) {
             dp[i][j] = (arr[i] <= j) ? dp[i - 1][j] || dp[i - 1][j - arr[i]]
-                : dp[i - 1][j];
+                                     : dp[i - 1][j];
         }
     }
     vector<int> temp;
@@ -1928,8 +1863,8 @@ vector<vector<int>> combinationSum2(vector<int> arr, int target) {
     return res;
 }
 
-void combinationSum3Util(int size, int target, int i, vector<int>& rs,
-    vector<vector<int>>& result) {
+void combinationSum3Util(int size, int target, int i, vector<int> &rs,
+                         vector<vector<int>> &result) {
     // cout << "I: " << i << " T : " << target << "  " ;
     // printVect(rs);
     if (target == 0 && rs.size() == size) {
@@ -1969,8 +1904,8 @@ long int findPermutations(vector<int> arr) {
     return count;
 }
 
-int combinationSum4Util(vector<int>& arr, int target, int count, vector<int> rs,
-    vector<vector<int>>& dp4) {
+int combinationSum4Util(vector<int> &arr, int target, int count, vector<int> rs,
+                        vector<vector<int>> &dp4) {
     // if(target > 0 && dp4[target][count] !=  0) {
     //     return dp4[target][count];
     // }
@@ -1997,7 +1932,7 @@ int combinationSum4Util(vector<int>& arr, int target, int count, vector<int> rs,
     return temp;
 }
 
-int combinationSum4(vector<int>& arr, int target) {
+int combinationSum4(vector<int> &arr, int target) {
     vector<vector<int>> dp4(target + 1);
     for (int i = 0; i < target + 1; i++) {
         for (int j = 0; j < arr.size() + 1; j++) {
@@ -2009,7 +1944,7 @@ int combinationSum4(vector<int>& arr, int target) {
     return temp;
 }
 
-void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+void merge(vector<int> &nums1, int m, vector<int> &nums2, int n) {
     vector<int> temp;
     for (int i = 0; i < m; i++) {
         temp.push_back(nums1[i]);
@@ -2022,8 +1957,7 @@ void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
         if (temp[i] < nums2[j]) {
             nums1.push_back(temp[i]);
             i++;
-        }
-        else {
+        } else {
             nums1.push_back(nums2[j]);
             j++;
         }
@@ -2042,7 +1976,7 @@ void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
     printVect(nums1);
 }
 
-vector<int> runningSum(vector<int>& nums) {
+vector<int> runningSum(vector<int> &nums) {
     for (int i = 1; i < nums.size(); i++) {
         nums[i] += nums[i - 1];
     }
@@ -2050,7 +1984,7 @@ vector<int> runningSum(vector<int>& nums) {
     return nums;
 }
 
-int maximumWealth(vector<vector<int>>& accounts) {
+int maximumWealth(vector<vector<int>> &accounts) {
     int maxWealth = 0;
     for (int i = 0; i < accounts.size(); i++) {
         int temp = 0;
@@ -2070,9 +2004,9 @@ bool compareIndex(pair<int, int> i1, pair<int, int> i2) {
     return (i1.second < i2.second);
 }
 
-bool isEqual(pair<int, int>& element) { return true; }
+bool isEqual(pair<int, int> &element) { return true; }
 
-void relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
+void relativeSortArray(vector<int> &arr1, vector<int> &arr2) {
     vector<pair<int, int>> pair;
     vector<int> temp;
     // for(int i = 0; i < arr1.size(); i++) {
@@ -2133,14 +2067,14 @@ void relativeSortArray(vector<int>& arr1, vector<int>& arr2) {
 }
 
 class SubrectangleQueries {
-public:
+  public:
     vector<vector<int>> matrix;
     vector<vector<int>> index;
-    SubrectangleQueries(vector<vector<int>>& rectangle) { matrix = rectangle; }
+    SubrectangleQueries(vector<vector<int>> &rectangle) { matrix = rectangle; }
 
     void updateSubrectangle(int row1, int col1, int row2, int col2,
-        int newValue) {
-        index.push_back({ row1, col1, row2, col2, newValue });
+                            int newValue) {
+        index.push_back({row1, col1, row2, col2, newValue});
     }
 
     int getValue(int row, int col) {
@@ -2154,7 +2088,7 @@ public:
     }
 };
 
-int numTeams(vector<int>& arr) {
+int numTeams(vector<int> &arr) {
     int size = arr.size();
     int count = 0;
     vector<vector<int>> dpG(size);
@@ -2189,7 +2123,7 @@ int numTeams(vector<int>& arr) {
 
 bool compare(int v1, int v2) { return (abs(v1) < abs(v2)); }
 
-bool canReorderDoubled(vector<int>& arr) {
+bool canReorderDoubled(vector<int> &arr) {
     int size = arr.size();
     sort(arr.begin(), arr.end(), compare);
     printVect(arr);
@@ -2219,7 +2153,7 @@ bool canReorderDoubled(vector<int>& arr) {
     return true;
 }
 
-long int maxDistance(vector<int>& arr, int m) {
+long int maxDistance(vector<int> &arr, int m) {
     int size = arr.size();
     sort(arr.begin(), arr.end());
     long int temp = 9;
@@ -2230,7 +2164,7 @@ long int maxDistance(vector<int>& arr, int m) {
         long int count = 1;
         for (long int i = step; i < size + step && count < m; i += step) {
             long int diff = count == m - 1 ? abs(arr[size - 1] - arr[i - step])
-                : abs(arr[i] - arr[i - step]);
+                                           : abs(arr[i] - arr[i - step]);
             min = diff < min ? diff : min;
             cout << min << endl;
             count++;
@@ -2245,7 +2179,7 @@ long int maxDistance(vector<int>& arr, int m) {
     return max;
 }
 
-void rotate(vector<int>& arr, int k) {
+void rotate(vector<int> &arr, int k) {
     int size = arr.size();
     k %= size;
     if (size == 0 || k == 0) {
@@ -2274,7 +2208,7 @@ void rotate(vector<int>& arr, int k) {
     }
 }
 
-bool containsDuplicate(vector<int>& nums) {
+bool containsDuplicate(vector<int> &nums) {
     unordered_map<int, int> mp;
     for (int i = 0; i < nums.size(); i++) {
         if (mp[nums[i]] > 0) {
@@ -2285,7 +2219,7 @@ bool containsDuplicate(vector<int>& nums) {
     return true;
 }
 
-int singleNumber(vector<int>& arr) {
+int singleNumber(vector<int> &arr) {
     int x = 0;
     for (int i = 0; i < arr.size(); i++) {
         x = x ^ arr[i];
@@ -2294,7 +2228,7 @@ int singleNumber(vector<int>& arr) {
     return x;
 }
 
-vector<int> intersect(vector<int>& arr, vector<int>& arr2) {
+vector<int> intersect(vector<int> &arr, vector<int> &arr2) {
     sort(arr.begin(), arr.end());
     sort(arr2.begin(), arr2.end());
 
@@ -2305,11 +2239,9 @@ vector<int> intersect(vector<int>& arr, vector<int>& arr2) {
             result.push_back(arr[i]);
             i++;
             j++;
-        }
-        else if (arr[i] < arr2[j]) {
+        } else if (arr[i] < arr2[j]) {
             i++;
-        }
-        else {
+        } else {
             j++;
         }
     }
@@ -2317,7 +2249,7 @@ vector<int> intersect(vector<int>& arr, vector<int>& arr2) {
     return result;
 }
 
-vector<int> plusOne(vector<int>& arr) {
+vector<int> plusOne(vector<int> &arr) {
     int size = arr.size();
     int carry = 0;
     arr[size - 1] += 1;
@@ -2330,8 +2262,7 @@ vector<int> plusOne(vector<int>& arr) {
             if (arr[i] == 10) {
                 arr[i] = 0;
                 carry = 1;
-            }
-            else {
+            } else {
                 return arr;
             }
         }
@@ -2345,19 +2276,17 @@ vector<int> plusOne(vector<int>& arr) {
     return arr;
 }
 
-void moveZeroes(vector<int>& arr) {
+void moveZeroes(vector<int> &arr) {
     int size = arr.size();
     int i = 0, j = 0;
     while (i < size && j < size) {
         if (arr[i] != 0) {
             i++;
             j++;
-        }
-        else if (arr[i] == 0 && arr[j] != 0) {
+        } else if (arr[i] == 0 && arr[j] != 0) {
             swap(arr, i, j);
             i++;
-        }
-        else {
+        } else {
             j++;
         }
     }
@@ -2365,8 +2294,8 @@ void moveZeroes(vector<int>& arr) {
     printVect(arr);
 }
 
-bool isValid3X3(vector<vector<char>>& arr, int start, int end) {
-    vector<int> hash = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+bool isValid3X3(vector<vector<char>> &arr, int start, int end) {
+    vector<int> hash = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     for (int i = start; i < start + 3; i++) {
         for (int j = end; j < end + 3; j++) {
             int temp = arr[i][j] - 48;
@@ -2382,7 +2311,7 @@ bool isValid3X3(vector<vector<char>>& arr, int start, int end) {
     return true;
 }
 
-bool isValidSudoku(vector<vector<char>>& arr) {
+bool isValidSudoku(vector<vector<char>> &arr) {
 
     for (int i = 0; i < arr.size(); i += 3) {
         for (int j = 0; j < arr[i].size(); j += 3) {
@@ -2394,8 +2323,8 @@ bool isValidSudoku(vector<vector<char>>& arr) {
     }
 
     for (int i = 0; i < arr.size(); i++) {
-        vector<int> hash = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        vector<int> hash2 = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        vector<int> hash = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        vector<int> hash2 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         for (int j = 0; j < arr[i].size(); j++) {
             int temp = arr[i][j] - 48;
             int temp2 = arr[j][i] - 48;
@@ -2430,8 +2359,7 @@ void ambiguousCoordinates(string s) {
         for (int j = 0; j < size; j++) {
             if (j == i) {
                 cout << s[i] << ", ";
-            }
-            else {
+            } else {
                 cout << s[j];
             }
         }
@@ -2439,7 +2367,7 @@ void ambiguousCoordinates(string s) {
     }
 }
 
-int distributeCandies(vector<int>& candyType) {
+int distributeCandies(vector<int> &candyType) {
     sort(candyType.begin(), candyType.end());
     int k = candyType.size() / 2;
     int count = 1;
@@ -2454,7 +2382,7 @@ int distributeCandies(vector<int>& candyType) {
     return count;
 }
 
-vector<int> findErrorNums(vector<int>& nums) {
+vector<int> findErrorNums(vector<int> &nums) {
     vector<int> res;
     int sum = 0;
     int size = nums.size();
@@ -2464,8 +2392,7 @@ vector<int> findErrorNums(vector<int>& nums) {
         int num = abs(nums[i]) - 1;
         if (nums[num] < 0) {
             res.push_back(num + 1);
-        }
-        else {
+        } else {
             nums[num] = -nums[num];
         }
     }
@@ -2474,13 +2401,14 @@ vector<int> findErrorNums(vector<int>& nums) {
     return res;
 }
 
-bool cmp(pair<int, int>& a, pair<int, int>& b) {
+bool cmp(pair<int, int> &a, pair<int, int> &b) {
     if (a.second == b.second) {
         return a.first < b.first;
-    } return a.second < b.second;
+    }
+    return a.second < b.second;
 }
 
-int findLHS(vector<int>& arr) {
+int findLHS(vector<int> &arr) {
     int size = arr.size();
     sort(arr.begin(), arr.end());
     map<long int, int> mp;
@@ -2498,8 +2426,7 @@ int findLHS(vector<int>& arr) {
         if (i == mp.begin()) {
             t1 = i->second;
             y1 = i->first;
-        }
-        else {
+        } else {
             t2 = i->second;
             y2 = i->first;
 
@@ -2524,7 +2451,7 @@ int numberOfSteps(int num) {
     return count;
 }
 
-int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+int shortestPathBinaryMatrix(vector<vector<int>> &grid) {
     int l = grid.size();
     int h = grid[0].size();
 
@@ -2533,9 +2460,11 @@ int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
     }
 
     queue<vector<int>> q;
-    q.push({ 0, 0, 1 });
+    q.push({0, 0, 1});
     grid[0][0] = 1;
-    vector<vector<int>> step = { {0, 1},{1, 0},{0, -1},{-1, 0},{1, 1},{1, -1},{-1, -1},{-1, 1}, };
+    vector<vector<int>> step = {
+        {0, 1}, {1, 0}, {0, -1}, {-1, 0}, {1, 1}, {1, -1}, {-1, -1}, {-1, 1},
+    };
     int minSS = INT32_MAX;
     while (!q.empty()) {
         int size = q.size();
@@ -2553,7 +2482,7 @@ int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
                 j = temp[1] + step[tt][1];
 
                 if (i >= 0 && i < l && j >= 0 && j < h && grid[i][j] == 0) {
-                    q.push({ i, j, temp[2] + 1 });
+                    q.push({i, j, temp[2] + 1});
                     grid[i][j] = 1;
                 }
             }
@@ -2563,15 +2492,14 @@ int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
     return -1;
 }
 
-void kWeakestRows(vector<vector<int>>& mat, int k) {
+void kWeakestRows(vector<vector<int>> &mat, int k) {
     vector<pair<int, int>> mp;
     for (int i = 0; i < mat.size(); i++) {
         int count = 0;
         for (int j = 0; j < mat[0].size(); j++) {
             if (mat[i][j] == 1) {
                 count++;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -2586,20 +2514,19 @@ void kWeakestRows(vector<vector<int>>& mat, int k) {
     }
 
     printVect(res);
-
 }
 
-int findMaxConsecutiveOnes(vector<int>& nums) {
+int findMaxConsecutiveOnes(vector<int> &nums) {
     int count = 0;
     int max = 0;
-    for(int i = 0; i < nums.size(); i++) {
-        if(nums[i] == 0) {
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] == 0) {
             count = 0;
         } else {
             count++;
         }
 
-        if(count > max) {
+        if (count > max) {
             max = count;
         }
     }
@@ -2607,25 +2534,25 @@ int findMaxConsecutiveOnes(vector<int>& nums) {
     return max;
 }
 
-vector<int> sortedSquares(vector<int>& nums) {
+vector<int> sortedSquares(vector<int> &nums) {
     vector<int> v1;
     vector<int> v2;
     vector<int> res;
 
     int size = nums.size();
 
-    for(int i = 0; i < size; i++) {
-        if(nums[i] < 0) {
-            v1.push_back(nums[i]*nums[i]);
+    for (int i = 0; i < size; i++) {
+        if (nums[i] < 0) {
+            v1.push_back(nums[i] * nums[i]);
         } else {
-            v2.push_back(nums[i]*nums[i]);
+            v2.push_back(nums[i] * nums[i]);
         }
     }
 
-    int i = v1.size()-1;
+    int i = v1.size() - 1;
     int j = 0;
     while (i >= 0 && j < v2.size()) {
-        if(v1[i] < v2[j]) {
+        if (v1[i] < v2[j]) {
             res.push_back(v1[i]);
             i--;
         } else {
@@ -2639,19 +2566,18 @@ vector<int> sortedSquares(vector<int>& nums) {
         i--;
     }
 
-    while(j < v2.size()) {
+    while (j < v2.size()) {
         res.push_back(v2[j]);
         j++;
     }
 
-    return res;    
+    return res;
 }
 
-int countDigit(long long n, vector<int>& digit){
+int countDigit(long long n, vector<int> &digit) {
     int count = 0;
-    while (n != 0) 
-    {
-        digit.push_back(n%10);
+    while (n != 0) {
+        digit.push_back(n % 10);
         n = n / 10;
         ++count;
     }
@@ -2659,41 +2585,86 @@ int countDigit(long long n, vector<int>& digit){
 }
 
 bool isPalindrome(int x) {
-    if(x < 0) {
+    if (x < 0) {
         return false;
     }
     vector<int> digit;
-    int size  = countDigit(x, digit);
-    for(int i = 0; i < size/2; i++) {
-        if(digit[i] != digit[size-1-i]) {
+    int size = countDigit(x, digit);
+    for (int i = 0; i < size / 2; i++) {
+        if (digit[i] != digit[size - 1 - i]) {
             return false;
         }
     }
 
-     return true;
+    return true;
 }
+
+void duplicateZeros(vector<int> &arr) {
+
+    int size = arr.size();
+    int last = arr.size() - 1;
+    for (int i = 0; i < size; i++) {
+        if (arr[i] == 0) {
+            last--;
+        }
+        if (i >= last) {
+            break;
+        }
+
+    }
+    cout << last << " " << arr[last];
+}
+
 int main() {
     int size = 15;
-    int arr[size] = { 7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1 };
+    int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
     int size2 = 2;
-    int arr2[size2] = { 3, 4 };
+    int arr2[size2] = {3, 4};
 
-    vector<vector<char>> mt = { {'1', '0'}, {'1', '0'} };
+    vector<vector<char>> mt = {{'1', '0'}, {'1', '0'}};
 
     vector<vector<int>> res;
 
-    vector<vector<int>> res2 = { {1, 1, 1}, {2, 2, 2}, {3, 3, 3} };
+    vector<vector<int>> res2 = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
 
-    vector<int> vt = {-7, -4, -3, -1, 0, 1, 2, 3, 3,4  ,5};
-    vector<int> sd = { 9, 4, 9, 8, 4 };
+    vector<int> vt = {1, 0, 8, 0, 9, 0, 9, 0, 7, 0, 8};
+    vector<int> sd = {9, 4, 9, 8, 4};
     vector<int> rs;
-    vector<vector<int>> ct = { {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0}, {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}, {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}, {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0}, {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0} };
+    vector<vector<int>> ct = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                              {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                              {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                              {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                              {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+                              {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0}};
 
     string s = "1212343";
     printVect(vt);
+    duplicateZeros(vt);
     // cout << findLHS(vt) << endl;
 
-    cout <<  "h s " << isPalindrome(1231) << "hey";
+    cout << " h s " << isPalindrome(1231) << "hey";
     // sortedSquares(vt);
     // cout << findMaxConsecutiveOnes(vt) << endl;
     // kWeakestRows(ct, 7);
