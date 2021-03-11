@@ -2780,6 +2780,38 @@ void rotate(vector<vector<int>> &mt) {
     }
 }
 
+long int coinChangeUtil(vector<int> &coins, int amount, int idx,
+                        vector<vector<long int>> &dp) {
+    // 2, 3, 4  = 17
+    if (amount == 0) {
+        return 0;
+    }
+    if (amount < 0 || idx >= coins.size()) {
+        return INT32_MAX;
+    }
+    if (dp[idx][amount]) {
+        return dp[idx][amount];
+    }
+
+    long int mt = min(1 + coinChangeUtil(coins, amount - coins[idx], idx, dp),
+                      coinChangeUtil(coins, amount, idx + 1, dp));
+
+    dp[idx][amount] = mt;
+
+    return mt;
+}
+
+int coinChange(vector<int> &coins, int amount) {
+
+    vector<vector<long int>> dp(coins.size() + 1);
+    for (int i = 0; i < coins.size() + 1; i++) {
+        dp[i] = vector<long int>(amount + 1);
+    }
+    long int res = coinChangeUtil(coins, amount, 0, dp);
+
+    return res == INT32_MAX ? -1 : res;
+}
+
 int main() {
     int size = 15;
     int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -2792,7 +2824,7 @@ int main() {
 
     vector<vector<int>> res2 = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
 
-    vector<int> vt = {0, 3, 4};
+    vector<int> vt = {1, 2, 5, 4};
     vector<int> sd = {1, 2, 3, 4};
     vector<int> rs;
     vector<vector<int>> ct = {{5, 1, 9, 1, 7, 5}, {2, 4, 8, 0, 6, 4},
@@ -2800,9 +2832,8 @@ int main() {
                               {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
     string s = "1212343";
     printVect(vt);
-    print2dVect(ct);
-    cout << "   -----------------      " << endl;
-    rotate(ct);
+    // cout << coinChange(vt, 31) << endl;
+    // rotate(ct);
     // cout << intToRoman(3949) << endl;
     // findDisappearedNumbers(vt);
     // thirdMax(vt);

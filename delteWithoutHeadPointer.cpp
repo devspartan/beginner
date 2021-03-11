@@ -2,37 +2,30 @@
 
 using namespace std;
 
-struct Node
-{
+struct Node {
     int data;
     struct Node *next;
 };
 
 Node *head = NULL;
 
-Node *createNode(int data)
-{
+Node *createNode(int data) {
     Node *newNode = new Node;
     newNode->data = data;
     newNode->next = NULL;
     return newNode;
 }
 
-void addNode(int data)
-{
+void addNode(int data) {
 
     Node *newNode = createNode(data);
     Node *temp;
 
-    if (head == NULL)
-    {
+    if (head == NULL) {
         head = newNode;
-    }
-    else
-    {
+    } else {
         temp = head;
-        while (temp->next != NULL)
-        {
+        while (temp->next != NULL) {
             temp = temp->next;
         }
 
@@ -40,19 +33,14 @@ void addNode(int data)
     }
 }
 
-void deleteNode(int value)
-{
+void deleteNode(int value) {
     Node *temp = head;
 
-    if (temp->data == value)
-    {
+    if (temp->data == value) {
         head = temp->next;
         free(temp);
-    }
-    else
-    {
-        while (temp->next->data != value)
-        {
+    } else {
+        while (temp->next->data != value) {
             temp = temp->next;
         }
 
@@ -62,32 +50,22 @@ void deleteNode(int value)
     }
 }
 
-void deleteWithoutHead(Node *node) {
-    Node *temp = node;
-    *node = *(node->next);
-}
-
-void printLL()
-{
+void printLL() {
     Node *temp = head;
 
-    while (temp != NULL)
-    {
+    while (temp != NULL) {
         cout << temp->data << " ";
         temp = temp->next;
     }
 
-    
     cout << endl;
 }
 
-int main()
-{
+int main() {
     int arr[5] = {1, 2, 3, 4, 5};
-    for (int i = 0; i < 5; i++)
-    {
+    for (int i = 0; i < 5; i++) {
         addNode(arr[i]);
-    } 
+    }
 
     cout << head << " " << *head << endl;
 

@@ -480,15 +480,127 @@ int firstUniqChar(string s) {
     return -1;
 }
 
+bool isAnagram(string s, string t) {
+    if (s.length() != t.length()) {
+        return false;
+    }
+    vector<int> hash(26);
+    for (int i = 0; i < s.length(); i++) {
+        hash[s[i] - 97]++;
+    }
+    for (int i = 0; i < t.length(); i++) {
+        hash[t[i] - 97]--;
+    }
+    for (int i = 0; i < 26; i++) {
+        if (hash[i] != 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool isPalindrome(string s) {
+    int length = s.length();
+
+    int i = 0, j = length - 1;
+    while (i <= j) {
+        if (s[i] < 48 || s[i] > 57 && s[i] < 65 || s[i] > 90 && s[i] < 97 ||
+            s[i] > 122) {
+            cout << s[i] << " got 1 " << s[j] << endl;
+            i++;
+        } else if (s[j] < 48 || s[j] > 57 && s[j] < 65 ||
+                   s[j] > 90 && s[j] < 97 || s[j] > 122) {
+            cout << s[i] << " got 2 " << s[j] << endl;
+            j--;
+        } else if (s[i] == s[j] || s[i] + 32 == s[j] || s[j] + 32 == s[i]) {
+            cout << "got 3" << endl;
+            i++;
+            j--;
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int strStr(string haystack, string needle) {
+    int k = haystack.find(needle);
+    return k;
+}
+
+string countAndSay(int n) {
+    if (n == 1) {
+        return "1";
+    }
+
+    string tt = countAndSay(n - 1);
+    string res = "";
+    int count = 1;
+    for (int i = 0; i < tt.length() - 1; i++) {
+        if (tt[i] == tt[i + 1]) {
+            count++;
+        } else {
+            res += to_string(count) + "" + tt[i];
+            count = 1;
+        }
+    }
+
+    res += to_string(count) + "" + tt[tt.length() - 1];
+    return res;
+}
+
+string longestCommonPrefix(vector<string> &strs) {
+
+    int size = strs.size();
+
+    if (size == 0) {
+        return "";
+    }
+    if (size == 1) {
+        return strs[0];
+    }
+
+    string res = "";
+    for (int j = 0; j < strs[0].length() && j < strs[1].length(); j++) {
+        if (strs[0][j] == strs[1][j]) {
+            res += strs[0][j];
+        } else {
+            break;
+        }
+    }
+
+    string temp;
+    for (int i = 2; i < size; i++) {
+        temp = "";
+        for (int j = 0; j < strs[i].length() && j < res.length(); j++) {
+            if (strs[i][j] == res[j]) {
+                temp += res[j];
+            } else {
+                break;
+            }
+        }
+        res = temp;
+    }
+
+    return res;
+}
+
 int main() {
 
     vector<string> vt = {"time", "me", "ime", "bell", "be", "ell"};
-    string str = "leleee";
+    string str = "hello world!";
     string parenthesis = "()(((()())(";
     string cha = "a1b4";
+    vector<string> pt = {"car", "cir"};
 
     cout << str << endl;
-    cout << firstUniqChar(str) << endl;
+    cout << longestCommonPrefix(pt) << endl;
+    // cout << countAndSay(2) << endl;
+    // cout << strStr(str, "") << endl;
+    // cout << isPalindrome(str) << endl;
+    // cout << firstUniqChar(str) << endl;
     // cout << minimumLengthEncoding(vt) << endl;
     // cout << longestPalindrome(str) << endl;
     // cout << str << endl;
