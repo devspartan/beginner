@@ -761,17 +761,20 @@ int removeElement(vector<int> &nums, int val) {
     }
 
     int curr = 0;
+    int nxt = 0;
 
-    while (curr < nums.size()) {
-        if (nums[curr] == val) {
-            swap(nums, curr, nums.size() - 1);
-            nums.pop_back();
-        } else {
+    while (nxt < nums.size()) {
+        if (nums[nxt] != val) {
+            swap(nums, nxt, curr);
             curr++;
+            nxt++;
+        } else {
+            nxt++;
         }
     }
-
-    return nums.size();
+    // printVect(nums);
+    // cout << curr << " " << nums[curr-1] << endl;
+    return curr;
 }
 
 int binarySearch(vector<int> arr, int l, int r, int x) {
@@ -1945,32 +1948,33 @@ int combinationSum4(vector<int> &arr, int target) {
 }
 
 void merge(vector<int> &nums1, int m, vector<int> &nums2, int n) {
-    vector<int> temp;
-    for (int i = 0; i < m; i++) {
-        temp.push_back(nums1[i]);
-    }
-    nums1.clear();
+    int size = m + n;
 
-    int i = 0;
-    int j = 0;
-    while (i < m && j < n) {
-        if (temp[i] < nums2[j]) {
-            nums1.push_back(temp[i]);
-            i++;
+    int idx = size - 1;
+    int i = m - 1;
+    int j = n - 1;
+    while (i >= 0 && j >= 0) {
+        if (nums1[i] > nums2[j]) {
+            nums1[idx] = nums1[i];
+            i--;
+            idx--;
         } else {
-            nums1.push_back(nums2[j]);
-            j++;
+            nums1[idx] = nums2[j];
+            j--;
+            idx--;
         }
     }
 
-    while (i < m) {
-        nums1.push_back(temp[i]);
-        i++;
+    while (i >= 0) {
+        nums1[idx] = nums1[i];
+        i--;
+        idx--;
     }
 
-    while (j < n) {
-        nums1.push_back(nums2[j]);
-        j++;
+    while (j >= 0) {
+        nums1[idx] = nums2[j];
+        j--;
+        idx--;
     }
 
     printVect(nums1);
@@ -2535,39 +2539,62 @@ int findMaxConsecutiveOnes(vector<int> &nums) {
 }
 
 vector<int> sortedSquares(vector<int> &nums) {
-    vector<int> v1;
-    vector<int> v2;
-    vector<int> res;
-
     int size = nums.size();
 
-    for (int i = 0; i < size; i++) {
-        if (nums[i] < 0) {
-            v1.push_back(nums[i] * nums[i]);
-        } else {
-            v2.push_back(nums[i] * nums[i]);
+    if (nums[0] >= 0) {
+        for (int i = 0; i < nums.size(); i++) {
+            nums[i] = nums[i] * nums[i];
         }
+        return nums;
     }
 
-    int i = v1.size() - 1;
-    int j = 0;
-    while (i >= 0 && j < v2.size()) {
-        if (v1[i] < v2[j]) {
-            res.push_back(v1[i]);
+    if (nums[size - 1] <= 0) {
+        for (int k = 0; k < size / 2; k++) {
+            nums[k] *= nums[k];
+            nums[size - 1 - k] *= nums[size - 1 - k];
+            int tt = nums[k];
+            nums[k] = nums[size - k - 1];
+            nums[size - k - 1] = tt;
+        }
+
+        if (size % 2 == 1) {
+            nums[size / 2] *= nums[size / 2];
+        }
+
+        return nums;
+    }
+
+    vector<int> res;
+
+    int i = 0, j, dd = -1;
+
+    for (int k = 0; k < nums.size(); k++) {
+        if (nums[k] >= 0 && dd == -1) {
+            j = k;
+            i = k - 1;
+            dd = k;
+        }
+        nums[k] *= nums[k];
+    }
+
+    printVect(nums);
+    while (i >= 0 && j < nums.size()) {
+        if (nums[i] < nums[j]) {
+            res.push_back(nums[i]);
             i--;
         } else {
-            res.push_back(v2[j]);
+            res.push_back(nums[j]);
             j++;
         }
     }
 
     while (i >= 0) {
-        res.push_back(v1[i]);
+        res.push_back(nums[i]);
         i--;
     }
 
-    while (j < v2.size()) {
-        res.push_back(v2[j]);
+    while (j < nums.size()) {
+        res.push_back(nums[j]);
         j++;
     }
 
@@ -2599,20 +2626,158 @@ bool isPalindrome(int x) {
     return true;
 }
 
-void duplicateZeros(vector<int> &arr) {
-
-    int size = arr.size();
-    int last = arr.size() - 1;
-    for (int i = 0; i < size; i++) {
-        if (arr[i] == 0) {
-            last--;
+bool checkIfExist(vector<int> &arr) {
+    vector<vector<int>> hash(2);
+    hash[0] = vector<int>(1000 + 5);
+    hash[1] = vector<int>(1000 + 5);
+    for (int i = 0; i < arr.size(); i++) {
+        if (arr[i] > 0) {
+            hash[0][arr[i]] = -1;
+        } else if (arr[i] < 0) {
+            hash[1][abs(arr[i])] = -1;
+        } else {
+            hash[0][0]++;
         }
-        if (i >= last) {
-            break;
-        }
-
     }
-    cout << last << " " << arr[last];
+
+    for (int i = 0; i < arr.size(); i++) {
+        if (arr[i] > 0 && 2 * arr[i] <= arr.size()) {
+            if (hash[0][2 * arr[i]] == -1) {
+                return true;
+            }
+        } else if (arr[i] < 0 && 2 * abs(arr[i]) <= arr.size()) {
+            if (hash[1][2 * abs(arr[i])] == -1) {
+                return true;
+            }
+        } else if (arr[i] == 0 && hash[0][0] > 1) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool validMountainArray(vector<int> &arr) {
+    if (arr.size() < 3) {
+        return false;
+    }
+    if (arr[1] < arr[0]) {
+        return false;
+    }
+
+    bool inc = true;
+    bool dec = false;
+    for (int i = 1; i < arr.size(); i++) {
+        if (arr[i] == arr[i - 1]) {
+            return false;
+        }
+        if (inc) {
+            if (arr[i] - arr[i - 1] < 0) {
+                dec = true;
+                inc = false;
+            }
+        } else {
+            if (arr[i] - arr[i - 1] > 0) {
+                return false;
+            }
+        }
+    }
+
+    return dec;
+}
+
+vector<int> sortArrayByParity(vector<int> &arr) {
+    int size = arr.size();
+    int even = size - 1, odd = 0;
+    while (odd <= even) {
+        if (arr[even] % 2 == 0 && arr[odd] % 2 == 1) {
+            swap(arr, even, odd);
+            even--;
+            odd++;
+        } else if (arr[odd] % 2 == 0) {
+            odd++;
+        } else if (arr[even] % 2 == 1) {
+            even--;
+        }
+    }
+    return arr;
+}
+
+int thirdMax(vector<int> &nums) {
+    long int n1 = -1000000000000;
+    long int n2 = -1000000000000;
+    long int n3 = -1000000000000;
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] > n1) {
+            n3 = n2;
+            n2 = n1;
+            n1 = nums[i];
+        } else if (nums[i] > n2 && nums[i] < n1) {
+            n3 = n2;
+            n2 = nums[i];
+        } else if (nums[i] > n3 && nums[i] < n2) {
+            n3 = nums[i];
+        }
+    }
+
+    if (n3 == -1000000000000) {
+        return n1;
+    }
+    return n3;
+}
+
+vector<int> findDisappearedNumbers(vector<int> &nums) {
+    vector<int> res;
+    for (int i = 0; i < nums.size(); i++) {
+        nums[abs(nums[i]) - 1] = -abs(nums[abs(nums[i]) - 1]);
+    }
+    for (int i = 0; i < nums.size(); i++) {
+        if (nums[i] < 0) {
+            res.push_back(i + 1);
+        }
+    }
+    return res;
+}
+
+string intToRoman(int num) {
+    vector<int> ix = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    vector<string> is = {"M",  "CM", "D",  "CD", "C",  "XC", "L",
+                         "XL", "X",  "IX", "V",  "IV", "I"};
+
+    string res = "";
+    int i = 0;
+    while (num != 0 && i <= 13) {
+        int t = num / ix[i];
+        if (t > 0) {
+            while (t--) {
+                res += is[i];
+            }
+            num = num % ix[i];
+        }
+        i++;
+    }
+
+    return res;
+}
+
+void rotate(vector<vector<int>> &mt) {
+    int m = mt.size();
+    for (int k = 0; k < m / 2; k++) {
+        for (int i = k; i < m - k - 1; i++) {
+            for (int j = 0; j < 3; j++) {
+                int tt = mt[k][i];
+                if (j == 0) {
+                    mt[k][i] = mt[i][m - k - 1];
+                    mt[i][m - k - 1] = tt;
+                } else if (j == 1) {
+                    mt[k][i] = mt[m - k - 1][m - i - 1];
+                    mt[m - k - 1][m - i - 1] = tt;
+                } else if (j == 2) {
+                    mt[k][i] = mt[m - i - 1][k];
+                    mt[m - i - 1][k] = tt;
+                }
+            }
+        }
+    }
 }
 
 int main() {
@@ -2627,45 +2792,27 @@ int main() {
 
     vector<vector<int>> res2 = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
 
-    vector<int> vt = {1, 0, 8, 0, 9, 0, 9, 0, 7, 0, 8};
-    vector<int> sd = {9, 4, 9, 8, 4};
+    vector<int> vt = {0, 3, 4};
+    vector<int> sd = {1, 2, 3, 4};
     vector<int> rs;
-    vector<vector<int>> ct = {{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-                              {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                              {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-                              {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-                              {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
-                              {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
-                              {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0}};
-
+    vector<vector<int>> ct = {{5, 1, 9, 1, 7, 5}, {2, 4, 8, 0, 6, 4},
+                              {3, 3, 6, 7, 4, 1}, {1, 4, 2, 6, 2, 9},
+                              {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
     string s = "1212343";
     printVect(vt);
-    duplicateZeros(vt);
+    print2dVect(ct);
+    cout << "   -----------------      " << endl;
+    rotate(ct);
+    // cout << intToRoman(3949) << endl;
+    // findDisappearedNumbers(vt);
+    // thirdMax(vt);
+    // sortArrayByParity(vt);
+    // duplicateZeros(vt);
     // cout << findLHS(vt) << endl;
-
-    cout << " h s " << isPalindrome(1231) << "hey";
-    // sortedSquares(vt);
+    // cout << validMountainArray(vt) << endl;
+    // merge(vt, 0, sd, 4);
+    // cout << " h s " << isPalindrome(1231) << "hey";
+    // sd = sortedSquares(vt);
     // cout << findMaxConsecutiveOnes(vt) << endl;
     // kWeakestRows(ct, 7);
     // cout << shortestPathBinaryMatrix(ct);
@@ -2681,6 +2828,8 @@ int main() {
     // rotate(vt, 1);
     // cout << containsDuplicate(vt) << endl;
     // removeDuplicates(vt);
+    // removeElement(vt, 2);
+
     // cout << maxDistance(vt, 4);
     // cout << canReorderDoubled(vt) << endl;
 }
