@@ -538,24 +538,106 @@ Node *mergeTwoLists(Node *l1, Node *l2) {
     return tt;
 }
 
+bool isPalindrome(Node *head) {
+    Node *temp = head;
+    int lenn = 0;
+    while (temp != NULL) {
+        temp = temp->next;
+        lenn++;
+    }
+    lenn = lenn / 2;
+    cout << lenn << endl;
+    Node *prev = NULL, *next, *curr;
+    temp = head;
+    while (lenn--) {
+        temp = temp->next;
+    }
+    curr = temp;
+    // cout << "  mid " << temp->data << "  " << endl;
+    while (curr != NULL) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    temp = head;
+    curr = prev;
+    while (curr != NULL) {
+        // cout << temp->data << "  " << curr->data << endl;
+        if (curr->data != temp->data) {
+            return false;
+        }
+        temp = temp->next;
+        curr = curr->next;
+    }
+
+    return true;
+}
+
+Node *swapNodes(Node *head, int k) {
+    Node *prevT1 = NULL, *prevT2 = NULL;
+    Node *t1 = head, *t2 = head;
+    Node *temp = head->next;
+    bool check = false;
+    int lenn = 1;
+    int fg = k;
+    k--;
+    while (k) {
+        prevT1 = t1;
+        t1 = t1->next;
+        temp = temp->next;
+        lenn++;
+        k--;
+    }
+
+    while (temp != NULL) {
+        prevT2 = t2;
+        t2 = t2->next;
+        temp = temp->next;
+        lenn++;
+    }
+
+    if (lenn == 1) {
+        return head;
+    }
+    if (fg == 1) {
+        prevT2->next = t1;
+        t2->next = t1->next;
+        t1->next = NULL;
+        return t2;
+    } else if (fg == lenn) {
+        prevT1->next = t2;
+        t1->next = t2->next;
+        t2->next = NULL;
+        return t1;
+    } else {
+        prevT1->next = t2;
+        prevT2->next = t1;
+        Node *k = t1->next;
+        t1->next = t2->next;
+        t2->next = k;
+        return head;
+    }
+
+    return head;
+}
+
 int main() {
-    vector<int> vt = {1, 3, 5, 14, 15, 17, 18};
+    vector<int> vt = {1, 2};
     vector<int> vt2 = {2, 4, 6, 6, 7, 7, 21};
     LinkList ll, l2;
 
     for (int i = 0; i < vt.size(); i++) {
         ll.insert(vt[i]);
-        l2.insert(vt2[i]);
+        // l2.insert(vt2[i]);
     }
 
     ll.print();
-    Node *r = mergeTwoLists(ll.start, l2.start);
-    // while (r != NULL) {
-    //     cout << r->data << " ";
-    // }
-    cout << endl;
-
+    ll.start = swapNodes(ll.start, 2);
     ll.print();
+    // cout << isPalindrome(ll.start) << endl;
+    // Node *r = mergeTwoLists(ll.start, l2.start);
+
     // ll.removeNthFromEnd(ll.start, 5);
     // for (int i = 0; i < size; i += 2)
     //     ll.swapNodes(i, i + 1);

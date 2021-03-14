@@ -587,16 +587,39 @@ string longestCommonPrefix(vector<string> &strs) {
     return res;
 }
 
+bool hasAllCodes(string s, int k) {
+    if (s.length() < k) {
+        return false;
+    }
+
+    long int count = pow(2, k);
+    string temp;
+    for (int i = 0; i < k; i++) {
+        temp += s[i];
+    }
+    set<string> hashSet;
+    for (int i = 0; i < s.length() - k + 1; i++) {
+        temp = s.substr(i, k);
+        hashSet.insert(temp);
+        if (hashSet.size() >= count) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 int main() {
 
     vector<string> vt = {"time", "me", "ime", "bell", "be", "ell"};
-    string str = "hello world!";
+    string str = "01110";
     string parenthesis = "()(((()())(";
     string cha = "a1b4";
     vector<string> pt = {"car", "cir"};
 
     cout << str << endl;
-    cout << longestCommonPrefix(pt) << endl;
+    cout << hasAllCodes(str, 2) << endl;
+    // cout << longestCommonPrefix(pt) << endl;
     // cout << countAndSay(2) << endl;
     // cout << strStr(str, "") << endl;
     // cout << isPalindrome(str) << endl;

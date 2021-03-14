@@ -26,7 +26,7 @@ class BST {
     void reverseLvelOrderTraversal();
     void preOrderWithoutRec();
     void mirrorTree(Node *temp);
-    Node *levelTree(int arr[], int size);
+    Node *levelTree(vector<int> arr, int size);
     int maxDepth(Node *temp);
     int minDepth(Node *temp);
     int maxWidth(Node *root);
@@ -39,7 +39,7 @@ class BST {
     Node *lca(int n1, int n2);
     Node *BTfromParentArray(int parent[], int n);
     Node *getNumberOfChildren(Node *tree, Node *countTree);
-    Node *sortedArrayToBST(int arr[], int st, int end);
+    Node *sortedArrayToBST(vector<int> arr, int st, int end);
     bool hasPathSum(Node *temp, int sum);
     void printRightView(Node *temp);
     Node *func(Node *temp, vector<int> &arr, int target, int idx);
@@ -51,6 +51,8 @@ class BST {
     Node *convertBSTtoGT(Node *root);
     vector<double> averageOfLevels(Node *root);
     Node *addOneRow(Node *root, int v, int d);
+    bool isValidBST(Node *root);
+    bool isSymmetric(Node *root);
 };
 
 Node *BST::createNode(int data) {
@@ -65,7 +67,6 @@ Node *BST::createNode(int data) {
 Node *BST::levelTree(Node *temp, int arr[], int i, int size) {
     if (i < size) {
         temp = createNode(arr[i]);
-
         temp->left = levelTree(temp->left, arr, 2 * i + 1, size);
         temp->right = levelTree(temp->right, arr, 2 * i + 2, size);
     } else {
@@ -349,7 +350,7 @@ void BST::mirrorTree(Node *temp) {
     mirrorTree(temp->right);
 }
 
-Node *BST::sortedArrayToBST(int arr[], int st, int end) {
+Node *BST::sortedArrayToBST(vector<int> arr, int st, int end) {
     cout << st << "  " << end << endl;
 
     if (st == end || st > end) {
@@ -384,7 +385,7 @@ int BST::countHalfNodes(Node *temp) {
     return 0;
 }
 
-Node *BST::levelTree(int arr[], int size) {
+Node *BST::levelTree(vector<int> arr, int size) {
 
     int i = 0;
     queue<Node *> q;
@@ -782,7 +783,7 @@ Node *BST::addOneRow(Node *root, int v, int d) {
                 Node *newNode = createNode(v);
                 newNode->left = ak->left;
                 ak->left = newNode;
-                Node *newNode = createNode(v);
+                newNode = createNode(v);
                 newNode->right = ak->right;
                 ak->right = newNode;
             }
@@ -811,22 +812,61 @@ Node *BST::addOneRow(Node *root, int v, int d) {
     return root;
 }
 
+bool isValidBSTUtil(Node *root, long long int l, long long int r) {
+    if (root == NULL) {
+        return true;
+    }
+    bool t1 = isValidBSTUtil(root->left, l, root->data);
+    bool t2 = isValidBSTUtil(root->right, root->data, r);
+    bool t3 = false;
+    if (l < root->data && root->data < r) {
+        t3 = true;
+    }
+    if (t1 == false || t2 == false || t3 == false) {
+        return false;
+    }
+    return true;
+}
+
+bool BST::isValidBST(Node *root) {
+    return isValidBSTUtil(root, INT64_MIN, INT64_MAX);
+}
+
+bool isSymmnetricUtil(Node *left, Node *right) {
+    if (left == NULL && right == NULL) {
+        return true;
+    } else if (left == NULL || right == NULL) {
+        return false;
+    }
+
+    return left->data == right->data &&
+           isSymmnetricUtil(left->left, right->right) &&
+           isSymmnetricUtil(left->right, right->left);
+}
+
+bool BST::isSymmetric(Node *root) {
+    return isSymmnetricUtil(root->left, root->right);
+}
+
 int main() {
     BST bt1;
     BST bt2;
     int size = 16;
     int size2 = 9;
-    vector<int> arr = {4, 1, 6, 0, 2, 5, 7, 3, 8};
+    vector<int> arr = {1, 2, 3, 4, 5, 6, 7, 8, 9};
     int arr2[size2] = {4, 2, 7, 5, 6, 1, 3, 2, 4};
     Node *temp = NULL;
-    for (int i = 0; i < arr.size(); i++) {
-        bt1.bt(arr[i]);
-        // bt2.bt(arr2[i]);
-    }
-
+    // for (int i = 0; i < arr.size(); i++) {
+    //     bt1.levelTree()
+    //     bt2.bt(arr2[i]);
+    // }
+    bt1.levelTree(arr, arr.size());
     bt1.levelOrderTraversal();
-    bt1.addOneRow(bt1.root, -2, 5);
+    Node *tt = bt1.sortedArrayToBST(arr, 0, arr.size() - 1);
 
+    // cout << bt1.isSymmetric(bt1.root) << endl;
+    // bt1.addOneRow(bt1.root, -2, 5);
+    // cout << bt1.isValidBST(bt1.root) << endl;
     // bt1.averageOfLevels(bt1.root);
     // rightSideView(bt1.root, 1);
     // bt1.convertBSTtoGT(bt1.root);

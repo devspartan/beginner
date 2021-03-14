@@ -1226,6 +1226,7 @@ int maxProfit(vector<int> &prices) {
     if (size == 0) {
         return 0;
     }
+
     int max = prices[size - 1];
     int dp[size];
     for (int i = size - 1; i >= 0; i--) {
@@ -1234,6 +1235,10 @@ int maxProfit(vector<int> &prices) {
         }
         dp[i] = max;
     }
+
+    // for (int i = 0; i < size; i++) {
+    //     cout << dp[i] << " ";
+    // }
 
     int maxprofit = 0;
     for (int i = 0; i < size; i++) {
@@ -1288,6 +1293,7 @@ int maxProfit2(vector<int> &arr) {
             pt += arr[i] - arr[i - 1];
         }
     }
+    cout << pt << endl;
     return pt;
 }
 
@@ -2812,6 +2818,105 @@ int coinChange(vector<int> &coins, int amount) {
     return res == INT32_MAX ? -1 : res;
 }
 
+int numFactoredBinaryTrees(vector<int> &arr) {
+    map<long int, long int> mp;
+
+    for (int i = 0; i < arr.size(); i++) {
+        mp[arr[i]] = 1;
+    }
+    long int MODULO = 1000000007;
+    long int count = 0;
+    for (int i = 0; i < arr.size(); i++) {
+        for (int j = 0; j < i; j++) {
+            int div = arr[i] / arr[j];
+            if (arr[i] % arr[j] == 0 && mp[div] != 0) {
+                int t1 = mp[arr[j]];
+                int t2 = mp[div];
+                mp[arr[i]] += t1 * t2;
+            }
+        }
+        count += mp[arr[i]];
+        count = count % MODULO;
+    }
+
+    for (int i = 0; i < arr.size(); i++) {
+        cout << mp[arr[i]] << " ";
+    }
+    return count;
+}
+
+int firstBadVersionUtil(vector<int> arr, int l, int r, int x) {
+    if (r >= l) {
+        int mid = l + (r - l) / 2;
+        cout << mid << " ";
+        cout << arr[mid] << endl;
+        if (arr[mid] == x)
+            return mid;
+
+        if (arr[mid] > x)
+            return firstBadVersionUtil(arr, l, mid - 1, x);
+
+        return firstBadVersionUtil(arr, mid + 1, r, x);
+    }
+
+    return -1;
+}
+
+int firstBadVersion() {
+    vector<int> arr = {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1};
+    cout << firstBadVersionUtil(arr, 0, arr.size() - 1, 1) << endl;
+    return 0;
+}
+
+int robUtil(vector<int> &nums, int i, vector<int> &dp) {
+
+    if (i >= nums.size()) {
+        return 0;
+    }
+
+    if (dp[i] != 0) {
+        return dp[i];
+    }
+
+    int temp =
+        max(robUtil(nums, i + 2, dp) + nums[i], robUtil(nums, i + 1, dp));
+    dp[i] = temp;
+    return temp;
+}
+
+int rob(vector<int> &nums) {
+    vector<int> dp(nums.size());
+    int sum = robUtil(nums, 0, dp);
+    cout << sum << endl;
+    return sum;
+}
+
+int maximumScore(vector<int> &nums, int k) {
+    int maxLength = 0;
+    int mxIdx = k;
+    int minIdx = k;
+    int min = k;
+    int i = k, j = k - 1;
+    while (i < nums.size() && j >= 0) {
+        if (nums[i] >= min) {
+            maxLength++;
+            mxIdx = i;
+            i++;
+        }
+        if (nums[j] >= min) {
+            maxLength++;
+            minIdx = j;
+            j++;
+        }
+
+        if (nums[i] < min) {
+        }
+    }
+
+    cout << minIdx << " " << maxLength << "  " << mxIdx << endl;
+    return abs(mxIdx - minIdx + 1) * nums[k];
+}
+
 int main() {
     int size = 15;
     int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -2824,7 +2929,7 @@ int main() {
 
     vector<vector<int>> res2 = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
 
-    vector<int> vt = {1, 2, 5, 4};
+    vector<int> vt = {7, 6, 4, 7, 9, 4, 2, 3, 1, 2, 5, 4, 7, 6, 5, 7};
     vector<int> sd = {1, 2, 3, 4};
     vector<int> rs;
     vector<vector<int>> ct = {{5, 1, 9, 1, 7, 5}, {2, 4, 8, 0, 6, 4},
@@ -2832,6 +2937,11 @@ int main() {
                               {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
     string s = "1212343";
     printVect(vt);
+    rob(vt);
+    // cout << maximumScore(vt, 3) << endl;
+    // maxProfit(vt);
+    // firstBadVersion();
+    // cout << numFactoredBinaryTrees(vt) << endl;
     // cout << coinChange(vt, 31) << endl;
     // rotate(ct);
     // cout << intToRoman(3949) << endl;
