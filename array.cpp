@@ -1236,9 +1236,10 @@ int maxProfit(vector<int> &prices) {
         dp[i] = max;
     }
 
-    // for (int i = 0; i < size; i++) {
-    //     cout << dp[i] << " ";
-    // }
+    for (int i = 0; i < size; i++) {
+        cout << dp[i] << " ";
+    }
+    cout << endl;
 
     int maxprofit = 0;
     for (int i = 0; i < size; i++) {
@@ -1279,7 +1280,7 @@ int maxProfit2Rec(vector<int> &arr, int s) {
     return maxPr;
 }
 
-int maxProfit2(vector<int> &arr) {
+int maxProfit2(vector<int> &arr, int fee) {
     int size = arr.size();
 
     if (size == 1) {
@@ -1288,7 +1289,8 @@ int maxProfit2(vector<int> &arr) {
 
     int pt = 0;
     for (int i = 1; i < size; i++) {
-        if (arr[i - 1] < arr[i]) {
+        int temp = arr[i] - arr[i - 1] - fee;
+        if (temp > 0) {
             cout << pt << "  " << arr[i] - arr[i - 1] << endl;
             pt += arr[i] - arr[i - 1];
         }
@@ -1328,7 +1330,7 @@ int maxProfit3(vector<int> &prices) {
             maxprofit = temp;
         }
     }
-    // printVect(profitVT);
+    printVect(profitVT);
     int mx1 = 0;
     int mx1Idx;
     int mx2 = 0;
@@ -1343,7 +1345,7 @@ int maxProfit3(vector<int> &prices) {
             mx2 = profitVT[i];
         }
     }
-
+    cout << mx1 + mx2 << endl;
     return (mx1 + mx2);
 }
 
@@ -2917,6 +2919,223 @@ int maximumScore(vector<int> &nums, int k) {
     return abs(mxIdx - minIdx + 1) * nums[k];
 }
 
+vector<vector<int>> subsetsUtil(vector<int> &nums, int i) {
+    if (i >= nums.size()) {
+        return {{}};
+    }
+
+    vector<vector<int>> temp = subsetsUtil(nums, i + 1);
+    print2dVect(temp);
+    vector<vector<int>> res;
+    for (int j = 0; j < temp.size(); j++) {
+        res.push_back(temp[j]);
+        temp[j].push_back(nums[i]);
+        res.push_back(temp[j]);
+    }
+    return res;
+}
+
+vector<vector<int>> subsets(vector<int> &nums) {
+    vector<vector<int>> res;
+    res = subsetsUtil(nums, 0);
+    return res;
+}
+
+vector<vector<int>> subsetsBitMasking(vector<int> &nums) {
+    int size = nums.size();
+    vector<vector<int>> res;
+
+    for (int i = 0; i < pow(2, size); i++) {
+        vector<int> temp;
+        for (int j = 0; j < size; j++) {
+            if ((i & (1 << j)) != 0) {
+                temp.push_back(nums[j]);
+            }
+        }
+        res.push_back(temp);
+    }
+    return res;
+}
+
+int singleNumber2(vector<int> &nums) {
+    vector<int> bits(32);
+    int positive = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        for (int j = 0; j < 32; j++) {
+            if (nums[i] >= 0) {
+                positive++;
+            }
+            if ((abs(nums[i]) & (1 << j)) != 0) {
+                bits[j]++;
+            }
+        }
+    }
+    int res = 0;
+    for (int i = 0; i < 32; i++) {
+        if (bits[i] % 3 != 0) {
+            res += pow(2, i);
+        }
+    }
+    return positive % 3 == 0 ? -1 * res : res;
+}
+
+uint32_t reverseBits(uint32_t n, int k) {
+    if (n <= 0) {
+        return 0;
+    }
+    int res = reverseBits(n / 2, k + 1);
+    cout << n % 2 << "";
+
+    return (n % 2) * pow(2, k) + res;
+}
+
+int longestIncPathUtil(vector<vector<int>> &matrix, vector<vector<int>> &mtDp,
+                       int i, int j) {
+
+    if (i >= matrix.size() || j >= matrix[0].size()) {
+        return 0;
+    }
+
+    if (mtDp[i][j] != -1) {
+        return mtDp[i][j];
+    }
+
+    matrix[i][j] *= -1;
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    int t1 = 0, t2 = 0, t3 = 0, t4 = 0;
+
+    if (i + 1 < m) {
+        if (matrix[i + 1][j] >= 0 && matrix[i + 1][j] > abs(matrix[i][j])) {
+            t1 = longestIncPathUtil(matrix, mtDp, i + 1, j);
+        }
+    }
+    if (i - 1 >= 0) {
+        if (matrix[i - 1][j] >= 0 && matrix[i - 1][j] > abs(matrix[i][j])) {
+            t2 = longestIncPathUtil(matrix, mtDp, i - 1, j);
+        }
+    }
+    if (j + 1 < n) {
+        if (matrix[i][j + 1] >= 0 && matrix[i][j + 1] > abs(matrix[i][j])) {
+            t3 = longestIncPathUtil(matrix, mtDp, i, j + 1);
+        }
+    }
+    if (j - 1 >= 0) {
+        if (matrix[i][j - 1] >= 0 && matrix[i][j - 1] > abs(matrix[i][j])) {
+            t4 = longestIncPathUtil(matrix, mtDp, i, j - 1);
+        }
+    }
+
+    int res = max(max(t1, t2), max(t3, t4)) + 1;
+    mtDp[i][j] = res;
+    matrix[i][j] *= -1;
+    return res;
+}
+
+int longestIncreasingPath(vector<vector<int>> &matrix) {
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    vector<vector<int>> mtDp(m);
+    for (int i = 0; i < m; i++) {
+        mtDp[i] = vector<int>(n, -1);
+    }
+
+    int res = 0, max = 0;
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (mtDp[i][j] == -1) {
+                res = longestIncPathUtil(matrix, mtDp, i, j);
+            } else {
+                res = mtDp[i][j];
+            }
+
+            if (res > max) {
+                max = res;
+            }
+        }
+    }
+
+    return max;
+}
+
+int removeDuplicates2(vector<int> &nums) {
+    int size = nums.size();
+    int i = 1, j = 1, c = 1;
+    while (i < nums.size()) {
+        if (nums[i] == nums[i - 1]) {
+            c++;
+            if (c <= 2) {
+                nums[j] = nums[i];
+                i++;
+                j++;
+            } else {
+                i++;
+            }
+        } else {
+            nums[j] = nums[i];
+            c = 1;
+            j++;
+            i++;
+        }
+    }
+    return j;
+}
+
+int minOperations(vector<int> &nums, int x) {
+    int i, len = 0, sum1 = 0, sum2 = 0;
+    for (i = 0; i < nums.size(); i++)
+        sum2 += nums[i];
+
+    sum2 -= x;
+
+    if (sum2 == 0)
+        return nums.size();
+
+    int j;
+    i = 0;
+    for (j = 0; j < nums.size(); j++) {
+        sum1 += nums[j];
+
+        while (i < nums.size() && sum1 > sum2)
+            sum1 -= nums[i++];
+
+        if (sum1 == sum2)
+            len = max(len, j - i + 1);
+    }
+    if (!len)
+        return -1;
+    return nums.size() - len;
+}
+
+int subarraySum(vector<int> &nums, int k) {
+    int count = 0, size = nums.size();
+    int tempSum = 0;
+    map<int, int> mp;
+    int sum = 0;
+    for (int i = 0; i < size; i++) {
+        sum += nums[i];
+        int temp = sum - k;
+        if (sum == k) {
+            cout << i << " " << sum << endl;
+            count++;
+        } 
+        if (mp.find(temp) != mp.end()) {
+            cout << i << " " << sum << " " << mp[temp] << endl;
+            count += mp[temp];
+        }
+
+        if (mp.find(sum) == mp.end()) {
+            mp[sum] = 1;
+        } else {
+            mp[sum]++;
+        }
+    }
+
+    return count;
+}
+
 int main() {
     int size = 15;
     int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -2928,18 +3147,29 @@ int main() {
     vector<vector<int>> res;
 
     vector<vector<int>> res2 = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
-
-    vector<int> vt = {7, 6, 4, 7, 9, 4, 2, 3, 1, 2, 5, 4, 7, 6, 5, 7};
-    vector<int> sd = {1, 2, 3, 4};
-    vector<int> rs;
-    vector<vector<int>> ct = {{5, 1, 9, 1, 7, 5}, {2, 4, 8, 0, 6, 4},
+    vector<vector<int>> ct = {{1, 1, 9, 1, 7, 5}, {2, 4, 8, 0, 6, 4},
                               {3, 3, 6, 7, 4, 1}, {1, 4, 2, 6, 2, 9},
                               {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
+    vector<vector<int>> f = {{9, 9, 4}, {6, 6, 8}, {2, 1, 1}};
+    vector<int> vt = {1, -1, 0};
+    vector<int> sd = {1, 4,  63, 6, 5,  12, 47,  56, 71, 5,  63, 15, 57, 12,
+                      1, 63, 5,  0, 67, 5,  178, 8,  6,  94, 5,  47, 69, 8};
+    vector<int> rs;
     string s = "1212343";
+
     printVect(vt);
-    rob(vt);
+    cout << subarraySum(vt, 0) << endl;
+    // cout << minOperations(vt, 4);
+    // longestIncreasingPath(f);
+    // cout << reverseBits(4, 0);
+    // cout << maxProfit(vt) << endl;
+    // cout << maxProfit3(vt) << endl;
+    // cout << maxProfitFee(vt, 3) << endl;
+    // cout << singleNumber2(vt);
+    // subsetsBitMasking(vt);
+    // subsets(vt);
+    // rob(vt);
     // cout << maximumScore(vt, 3) << endl;
-    // maxProfit(vt);
     // firstBadVersion();
     // cout << numFactoredBinaryTrees(vt) << endl;
     // cout << coinChange(vt, 31) << endl;

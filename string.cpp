@@ -609,16 +609,48 @@ bool hasAllCodes(string s, int k) {
     return false;
 }
 
+int lengthOfLongestSubstring(string s) {
+    vector<int> hash(150, -1);
+    int len = s.length();
+    int maxLen = 0;
+    int temp = 0;
+    int j = 0;
+    int i = 0;
+    int last = j;
+    while (j < len && i < len) {
+        for (i = last; i < s.length(); i++) {
+            if (hash[s[i]] == -1) {
+                hash[s[i]] = i;
+                temp++;
+            } else {
+                while (j <= hash[s[i]]) {
+                    hash[s[j]] = -1;
+                    j++;
+                }
+                last = i;
+                break;
+            }
+        }
+
+        if (temp > maxLen) {
+            maxLen = temp;
+        }
+        temp = last - j;
+    }
+    return maxLen;
+}
+
 int main() {
 
     vector<string> vt = {"time", "me", "ime", "bell", "be", "ell"};
     string str = "01110";
     string parenthesis = "()(((()())(";
-    string cha = "a1b4";
+    string cha = "";
     vector<string> pt = {"car", "cir"};
 
     cout << str << endl;
-    cout << hasAllCodes(str, 2) << endl;
+    cout << lengthOfLongestSubstring(cha) << endl;
+    // cout << hasAllCodes(str, 2) << endl;
     // cout << longestCommonPrefix(pt) << endl;
     // cout << countAndSay(2) << endl;
     // cout << strStr(str, "") << endl;
