@@ -3120,7 +3120,7 @@ int subarraySum(vector<int> &nums, int k) {
         if (sum == k) {
             cout << i << " " << sum << endl;
             count++;
-        } 
+        }
         if (mp.find(temp) != mp.end()) {
             cout << i << " " << sum << " " << mp[temp] << endl;
             count += mp[temp];
@@ -3136,6 +3136,94 @@ int subarraySum(vector<int> &nums, int k) {
     return count;
 }
 
+int spyDetected(vector<int> arr) {
+    int size = arr.size();
+    int a = arr[0];
+    int b = arr[1];
+    int c = arr[2];
+    if (a == b && b == c) {
+        for (int i = 3; i < size; i++) {
+            if (arr[i] != a) {
+                return i + 1;
+            }
+        }
+    } else if (a == b && b != c) {
+        return 3;
+    } else if (a == c && c != b) {
+        return 2;
+    } else {
+        return 1;
+    }
+
+    return 0;
+}
+
+vector<int> getSumAbsoluteDifferences(vector<int> &nums) {
+    vector<long int> sum;
+    vector<int> res;
+    long int ss = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        ss += nums[i];
+        sum.push_back(ss);
+    }
+
+    int l = nums.size();
+    res.push_back(ss - nums[0] * l);
+    l--;
+
+    for (int i = 1; i < nums.size(); i++) {
+        long int temp = abs((nums[i] * i) - sum[i - 1]) +
+                        abs((ss - sum[i - 1]) - (nums[i] * l));
+        res.push_back(temp);
+        l--;
+    }
+
+    return res;
+}
+
+int minFallingPathSumHelper(vector<vector<int>> &matrix, int i, int j,
+                            vector<vector<int>> &dpt) {
+    if (i == matrix.size() - 1 && j >= 0 && j <= matrix.size() - 1) {
+        dpt[i][j] = matrix[i][j];
+        return matrix[i][j];
+    }
+    if (j < 0 || j >= matrix.size()) {
+        return INT32_MAX;
+    }
+
+    if (dpt[i][j] != -1) {
+        return dpt[i][j];
+    }
+
+    int a = minFallingPathSumHelper(matrix, i + 1, j - 1, dpt) + matrix[i][j];
+    int b = minFallingPathSumHelper(matrix, i + 1, j, dpt) + matrix[i][j];
+    int c = minFallingPathSumHelper(matrix, i + 1, j + 1, dpt) + matrix[i][j];
+
+    if (a <= b && a <= c) {
+        dpt[i][j] = a;
+        return a;
+    } else if (b <= a && b <= c) {
+        dpt[i][j] = b;
+        return b;
+    } else {
+        dpt[i][j] = c;
+        return c;
+    }
+}
+
+int minFallingPathSum(vector<vector<int>> &matrix) {
+    int size = matrix.size();
+    vector<vector<int>> dpt(size, vector<int>(size, -1));
+    int min = INT32_MAX;
+    for (int i = 0; i < size; i++) {
+        int temp = minFallingPathSumHelper(matrix, 0, i, dpt);
+        if (temp < min) {
+            min = temp;
+        }
+    }
+    return min;
+}
+
 int main() {
     int size = 15;
     int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -3146,19 +3234,29 @@ int main() {
 
     vector<vector<int>> res;
 
-    vector<vector<int>> res2 = {{1, 1, 1}, {2, 2, 2}, {3, 3, 3}};
+    vector<vector<int>> res2 = {{-19}};
+
+    vector<int> sd = {1, 4,  63, 6, 5,  12, 47,  56, 71, 5,  63, 15, 57, 12,
+                      1, 63, 5,  0, 67, 5,  178, 8,  6,  94, 5,  47, 69, 8};
+
     vector<vector<int>> ct = {{1, 1, 9, 1, 7, 5}, {2, 4, 8, 0, 6, 4},
                               {3, 3, 6, 7, 4, 1}, {1, 4, 2, 6, 2, 9},
                               {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
+
     vector<vector<int>> f = {{9, 9, 4}, {6, 6, 8}, {2, 1, 1}};
-    vector<int> vt = {1, -1, 0};
-    vector<int> sd = {1, 4,  63, 6, 5,  12, 47,  56, 71, 5,  63, 15, 57, 12,
-                      1, 63, 5,  0, 67, 5,  178, 8,  6,  94, 5,  47, 69, 8};
+    vector<int> vt = {2, 3, 5};
     vector<int> rs;
+
     string s = "1212343";
 
+    print2dVect(res2);
+    cout << endl;
+    cout << minFallingPathSum(res2) << endl;
+    ;
+
     printVect(vt);
-    cout << subarraySum(vt, 0) << endl;
+    // cout << subarraySum(vt, 0) << endl;
+    // cout << spyDetected(vt) << endl;
     // cout << minOperations(vt, 4);
     // longestIncreasingPath(f);
     // cout << reverseBits(4, 0);

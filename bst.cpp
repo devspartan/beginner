@@ -53,6 +53,8 @@ class BST {
     Node *addOneRow(Node *root, int v, int d);
     bool isValidBST(Node *root);
     bool isSymmetric(Node *root);
+    Node *constructMaximumBinaryTree(vector<int> &nums);
+    Node *constructMBTHelper(vector<int> &nums, int start, int end);
 };
 
 Node *BST::createNode(int data) {
@@ -848,6 +850,30 @@ bool BST::isSymmetric(Node *root) {
     return isSymmnetricUtil(root->left, root->right);
 }
 
+Node *BST::constructMBTHelper(vector<int> &nums, int start, int end) {
+    if (start > end || start < 0 || end >= nums.size()) {
+        return NULL;
+    }
+
+    int max = -1;
+    int maxIdx = -1;
+    for (int i = start; i <= end; i++) {
+        if (nums[i] > max) {
+            max = nums[i];
+            maxIdx = i;
+        }
+    }
+
+    Node *res = createNode(nums[maxIdx]);
+    res->left = constructMBTHelper(nums, start, maxIdx - 1);
+    res->right = constructMBTHelper(nums, maxIdx + 1, end);
+    return res;
+}
+
+Node *BST::constructMaximumBinaryTree(vector<int> &nums) {
+    return constructMBTHelper(nums, 0, nums.size() - 1);
+}
+
 int main() {
     BST bt1;
     BST bt2;
@@ -857,13 +883,22 @@ int main() {
     int arr2[size2] = {4, 2, 7, 5, 6, 1, 3, 2, 4};
     Node *temp = NULL;
     // for (int i = 0; i < arr.size(); i++) {
-    //     bt1.levelTree()
+    //     bt1.levelTree();
     //     bt2.bt(arr2[i]);
     // }
-    bt1.levelTree(arr, arr.size());
-    bt1.levelOrderTraversal();
-    Node *tt = bt1.sortedArrayToBST(arr, 0, arr.size() - 1);
+    // bt1.levelTree(arr, arr.size());
+    // bt1.levelOrderTraversal();
 
+    // Node *tt = bt1.sortedArrayToBST(arr, 0, arr.size() - 1);
+
+    vector<int> v1 = {5, 8, 7, 6, 15, 2, 4, 12, 5, 4};
+    vector<int> v2;
+    vector<int> v3;
+
+    Node *tt2 = bt1.constructMaximumBinaryTree(v1);
+
+    levelOrderTemp(tt2);
+    cout << tt2->data << "get out dude";
     // cout << bt1.isSymmetric(bt1.root) << endl;
     // bt1.addOneRow(bt1.root, -2, 5);
     // cout << bt1.isValidBST(bt1.root) << endl;
@@ -874,8 +909,6 @@ int main() {
     // Node * asq = bt1.trimBst(bt1.root, 0, 3);
     // levelOrderTemp(asq);
 
-    vector<int> v1;
-
     // temp = bt1.levelTree(arr, size2);
     // bt1.inorderTraversal(temp, v1, 0);
     // cout << bt1.sumRootToLeaf(temp, v1) << endl;
@@ -884,8 +917,6 @@ int main() {
     // cout << "sum: " << sum  << endl;
     // cout << bt1.maxSumPath(bt1.root, 0) << endl;
 
-    vector<int> v2;
-    vector<int> v3;
     // bt1.inorderTraversal(bt1.root, v1, 1);
     // bt1.inorderWithoutRec();
     // bt1.mirrorTree(bt1.root);
