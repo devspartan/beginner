@@ -55,6 +55,7 @@ class BST {
     bool isSymmetric(Node *root);
     Node *constructMaximumBinaryTree(vector<int> &nums);
     Node *constructMBTHelper(vector<int> &nums, int start, int end);
+    int pseudoPalindromicPaths();
 };
 
 Node *BST::createNode(int data) {
@@ -127,7 +128,7 @@ void BST::levelOrderTraversal() {
         temp = q.front();
         q.pop();
     }
-    cout << endl;
+    cout << " level order traversal " << endl;
 }
 
 void BST::preOrderWithoutRec() {
@@ -414,7 +415,8 @@ Node *BST::levelTree(vector<int> arr, int size) {
         parent->right = rght;
         i += 1;
     }
-    cout << endl;
+    cout << "level tree created" << endl;
+    root = head;
     return head;
 }
 
@@ -874,31 +876,107 @@ Node *BST::constructMaximumBinaryTree(vector<int> &nums) {
     return constructMBTHelper(nums, 0, nums.size() - 1);
 }
 
+vector<vector<int>> levelOrder(Node *root) {
+    vector<vector<int>> res;
+    if (root == NULL) {
+        return res;
+    }
+
+    queue<Node *> q;
+    queue<Node *> q2;
+    Node *temp = root;
+    res.push_back(vector<int>(1, temp->data));
+    q.push(temp);
+    while (!q.empty()) {
+        vector<int> rt;
+        while (!q.empty()) {
+            Node *tt = q.front();
+            q.pop();
+
+            if (tt->left != NULL) {
+                rt.push_back(tt->left->data);
+                q2.push(tt->left);
+            }
+            if (tt->right != NULL) {
+                rt.push_back(tt->right->data);
+                q2.push(tt->right);
+            }
+        }
+
+        while (!q2.empty()) {
+            q.push(q2.front());
+            q2.pop();
+        }
+
+        res.push_back(rt);
+    }
+
+    // for (int i = 0; i < res.size(); i++) {
+    //     for (int j = 0; j < res[i].size(); j++) {
+    //         cout << res[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    // cout << endl;
+    return res;
+}
+
+int pseudoPalindromicPathsUtil(Node *root, unordered_map<int, int> &ump) {
+
+    if (root == NULL) {
+        return 0;
+    }
+
+    ump[root->data]++;
+
+    if (root->left == NULL && root->right == NULL) {
+        int count = 0;
+        for (auto it : ump) {
+            if (it.second % 2 == 1) {
+                count++;
+            }
+        }
+        ump[root->data]--;
+        return count >= 2 ? 0 : 1;
+    }
+
+    int t1 = pseudoPalindromicPathsUtil(root->left, ump);
+    int t2 = pseudoPalindromicPathsUtil(root->right, ump);
+    ump[root->data]--;
+
+    return t1 + t2;
+}
+
+int BST::pseudoPalindromicPaths() {
+    unordered_map<int, int> ump;
+    Node *temp = root;
+    return pseudoPalindromicPathsUtil(temp, ump);
+}
+
+// Node *recoverFromPreorder(string t) {}
+
 int main() {
     BST bt1;
     BST bt2;
     int size = 16;
     int size2 = 9;
-    vector<int> arr = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    vector<int> arr = {2, 3, 1, 3, 2, 2, 4};
     int arr2[size2] = {4, 2, 7, 5, 6, 1, 3, 2, 4};
     Node *temp = NULL;
     // for (int i = 0; i < arr.size(); i++) {
-    //     bt1.levelTree();
     //     bt2.bt(arr2[i]);
     // }
-    // bt1.levelTree(arr, arr.size());
-    // bt1.levelOrderTraversal();
-
+    bt1.levelTree(arr, arr.size());
+    bt1.levelOrderTraversal();
+    // bt1.inorderWithoutRec();
+    // levelOrder(bt1.root);
     // Node *tt = bt1.sortedArrayToBST(arr, 0, arr.size() - 1);
 
     vector<int> v1 = {5, 8, 7, 6, 15, 2, 4, 12, 5, 4};
     vector<int> v2;
     vector<int> v3;
 
-    Node *tt2 = bt1.constructMaximumBinaryTree(v1);
-
-    levelOrderTemp(tt2);
-    cout << tt2->data << "get out dude";
+    bt1.pseudoPalindromicPaths();
     // cout << bt1.isSymmetric(bt1.root) << endl;
     // bt1.addOneRow(bt1.root, -2, 5);
     // cout << bt1.isValidBST(bt1.root) << endl;
@@ -963,7 +1041,7 @@ int main() {
     // Node *countTree = bt1.createNode(0);
     // countTree->sum = 15;
 
-    cout << sizeof(Node) << " " << sizeof(BST) << endl;
+    // cout << sizeof(Node) << " " << sizeof(BST) << endl;
     // bt1.inorderTraversal(bt1.root, v1);
 
     // temp = bt.levelTree(temp, arr, 0, 7);

@@ -49,17 +49,6 @@ string longestPalindrome(string str) {
             }
         }
     }
-    // int lastJ = 0;
-    // for(int i = 0; i < size; i++) {
-    //     int temp = size - i - 1 + lastJ;
-    //     for(int j = temp; j < size; j++) {
-    //         if(dp[j-temp][j] == 1) {
-    //             lastJ = j;
-    //         }
-    //         cout << dp[j - temp][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
 
     bool st[size];
     for (int i = 0; i < size; i++) {
@@ -500,31 +489,6 @@ bool isAnagram(string s, string t) {
     return true;
 }
 
-bool isPalindrome(string s) {
-    int length = s.length();
-
-    int i = 0, j = length - 1;
-    while (i <= j) {
-        if (s[i] < 48 || s[i] > 57 && s[i] < 65 || s[i] > 90 && s[i] < 97 ||
-            s[i] > 122) {
-            cout << s[i] << " got 1 " << s[j] << endl;
-            i++;
-        } else if (s[j] < 48 || s[j] > 57 && s[j] < 65 ||
-                   s[j] > 90 && s[j] < 97 || s[j] > 122) {
-            cout << s[i] << " got 2 " << s[j] << endl;
-            j--;
-        } else if (s[i] == s[j] || s[i] + 32 == s[j] || s[j] + 32 == s[i]) {
-            cout << "got 3" << endl;
-            i++;
-            j--;
-        } else {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 int strStr(string haystack, string needle) {
     int k = haystack.find(needle);
     return k;
@@ -640,22 +604,301 @@ int lengthOfLongestSubstring(string s) {
     return maxLen;
 }
 
+bool compareLexographically(string s, int i, int j) {
+    while (i < s.length() && j < s.length()) {
+        if (s[i] < s[j]) {
+            return true;
+        } else if (s[i] > s[j]) {
+            return false;
+        }
+        i++;
+        j++;
+    }
+
+    return true;
+}
+
+string smallestSubsequence(string s) {
+    int size = s.length();
+    int hash[27] = {0};
+    int vis[27] = {0};
+    string res;
+    stack<char> st;
+    for (int i = 0; i < size; i++) {
+        hash[s[i] - 97] = i;
+    }
+
+    for (int i = 0; i < size; i++) {
+        if (vis[s[i] - 97]) {
+            continue;
+        } else {
+            while (!st.empty() && st.top() > s[i] && hash[st.top() - 97] > i) {
+                vis[st.top() - 97] = 0;
+                st.pop();
+            }
+
+            st.push(s[i]);
+            vis[s[i] - 97] = 1;
+        }
+    }
+
+    string str = "";
+    while (!st.empty()) {
+        char ch = st.top();
+        str += ch;
+        st.pop();
+    }
+    reverse(str.begin(), str.end());
+
+    return str;
+}
+
+int removePalindromeSub(string s) {
+    int len = s.length();
+    for (int i = 0; i < len / 2; i++) {
+        if (s[i] == s[len - i - 1]) {
+            continue;
+        } else {
+            return 2;
+        }
+    }
+    return 1;
+}
+
+int longestPalindromeCount(string s) {
+    unordered_map<char, int> umap;
+
+    int len = s.length();
+    for (int i = 0; i < len; i++) {
+        umap[s[i]]++;
+    }
+
+    for (auto it : umap) {
+        cout << it.first << " -> " << it.second << endl;
+    }
+    int count = 0;
+    int maxOdd = 0;
+    bool check = false;
+    bool gotOdd = false;
+    for (auto it : umap) {
+        if (it.second % 2 == 0) {
+            count += it.second;
+        } else {
+            if (it.second == 1 && check == false) {
+                count++;
+                check = true;
+            } else {
+                count += it.second - 1;
+            }
+            gotOdd = true;
+        }
+    }
+
+    return gotOdd && check == false ? count + 1 : count;
+}
+
+bool isPalindrome(string s) {
+    int len = s.length();
+
+    for (int i = 0; i < len; i++) {
+        if (s[i] >= 65 && s[i] <= 90) {
+            s[i] += 32;
+        }
+    }
+
+    bool check = true;
+    int i = 0, j = len - 1;
+    while (i < j) {
+        if (s[i] >= 97 && s[i] <= 122 || s[i] >= 48 && s[i] <= 57) {
+            if (s[j] >= 97 && s[j] <= 122 || s[j] >= 48 && s[j] <= 57) {
+                if (s[i] != s[j]) {
+                    check = false;
+                    break;
+                } else {
+                    i++;
+                    j--;
+                }
+            } else {
+                j--;
+            }
+        } else {
+            i++;
+        }
+    }
+
+    return check;
+}
+
+bool canConstruct(string s, int k) {
+    int len = s.length();
+
+    if (len < k) {
+        return false;
+    }
+
+    int oddCount = 0;
+    int evenCount = 0;
+    int hash[27] = {0};
+    for (int i = 0; i < len; i++) {
+        hash[s[i] - 97]++;
+    }
+    for (int i = 0; i < 27; i++) {
+        if (hash[i] % 2 == 1) {
+            oddCount++;
+        } else if (hash[i] != 0) {
+            evenCount++;
+        }
+    }
+
+    if (oddCount > k) {
+        return false;
+    }
+
+    return true;
+}
+
+int countSubstrings(string s) {
+    int len = s.length();
+    bool **dp = new bool *[len];
+
+    int res = len;
+    for (int i = 0; i < len; i++) {
+        dp[i] = new bool[len];
+    }
+
+    for (int i = 0; i < len; i++) {
+        for (int j = i; j < len; j++) {
+            if (i == j) {
+                dp[i][j] = true;
+            } else {
+
+                dp[i][j] = false;
+            }
+        }
+    }
+    for (int i = 0; i < len - 1; i++) {
+        if (s[i] == s[i + 1]) {
+            dp[i][i + 1] = true;
+            res++;
+        }
+    }
+
+    for (int k = 2; k < len; k++) {
+        for (int i = 0; i < len - k; i++) {
+            int j = i + k;
+            dp[i][j] = (s[i] == s[j]) ? true : false;
+            if (dp[i][j]) {
+                dp[i][j] = dp[i + 1][j - 1];
+            }
+
+            if (dp[i][j]) {
+                res++;
+            }
+        }
+    }
+
+    return res;
+}
+
+int countSubstringsSol2(string s) {
+    int cnt = s.length();
+    int n = s.length();
+    int j;
+
+    for (int i = 1; i < s.length(); i++) {
+        if (s[i - 1] == s[i]) {
+            j = 0;
+            while (((i + j) < n && (i - 1 - j) >= 0) &&
+                   (s[i - 1 - j] == s[i + j])) {
+                cnt++;
+                j++;
+            }
+        }
+        if ((i < (n - 1)) && (s[i - 1] == s[i + 1])) {
+            j = 1;
+            while (((i - j) >= 0 && (i + j) < n) && (s[i - j] == s[i + j])) {
+                cnt++;
+                j++;
+            }
+        }
+    }
+    return cnt;
+}
+
+int longestPalindromeSubseqRec(string s, int i, int j) {
+    if (i == j) {
+        return 1;
+    }
+    if (i > s.length() || j < 0 || i > j) {
+        return 0;
+    }
+
+    int t1 = 0, t2 = 0;
+    if (s[i] == s[j]) {
+        t1 = longestPalindromeSubseqRec(s, i + 1, j - 1) + 2;
+    } else {
+        t2 = max(longestPalindromeSubseqRec(s, i + 1, j),
+                 longestPalindromeSubseqRec(s, i, j - 1));
+    }
+
+    return max(t1, t2);
+}
+
+int longestPalindromeSubseq(string s) {
+    int len = s.length();
+    int **dp = new int *[len];
+
+    for (int i = 0; i < len; i++) {
+        dp[i] = new int[len];
+    }
+
+    for (int i = 0; i < len; i++) {
+        for (int j = i; j < len; j++) {
+            if (i == j) {
+                dp[i][j] = 1;
+            } else {
+                dp[i][j] = 0;
+            }
+        }
+    }
+
+    for (int k = 1; k < len; k++) {
+        for (int i = 0; i < len - k; i++) {
+            int j = i + k;
+            if (s[i] == s[j]) {
+                dp[i][j] = dp[i + 1][j - 1] + 2;
+            } else {
+                dp[i][j] = max(dp[i][j - 1], dp[i + 1][j]);
+            }
+        }
+    }
+
+    return dp[0][len - 1];
+}
+
 int main() {
 
     vector<string> vt = {"time", "me", "ime", "bell", "be", "ell"};
     string str = "01110";
     string parenthesis = "()(((()())(";
-    string cha = "";
+    string s = "";
     vector<string> pt = {"car", "cir"};
 
-    cout << str << endl;
-    cout << lengthOfLongestSubstring(cha) << endl;
+    cin >> s;
+    cout << longestPalindromeSubseq(s) << endl;
+    // cout << longestPalindromeSubseqRec(s, 0, s.length() - 1) << endl;
+    // cout << countSubstrings(s) << endl;
+    // cout << canConstruct(s, 2) << endl;
+    // cout << isPalindrome(s) << endl;
+    // cout << removePalindromeSub(s);
+    // cout << lengthOfLongestSubstring(s) << endl;
+
     // cout << hasAllCodes(str, 2) << endl;
     // cout << longestCommonPrefix(pt) << endl;
     // cout << countAndSay(2) << endl;
     // cout << strStr(str, "") << endl;
     // cout << isPalindrome(str) << endl;
-    // cout << firstUniqChar(str) << endl;
+    // cout << firstUniqsr(str) << endl;
     // cout << minimumLengthEncoding(vt) << endl;
     // cout << longestPalindrome(str) << endl;
     // cout << str << endl;
@@ -669,10 +912,9 @@ int main() {
     // {"phone","silver","pixel"},{"computer","silver","lenovo"},{"phone","gold","iphone"}
     // }; string ruleKey = "type"; string ruleValue = "phone"; cout <<
     // countMatches(items, ruleKey, ruleValue) << endl;
-    // letterCasePermutation(cha);
+    // letterCasePermutation(s);
     // cout << "parenthieses: " << longestValidParenthesisStack(parenthesis) <<
-    // endl; cout << countCharacters(vt, cha) << endl;
+    // endl; cout << countCharacters(vt, s) << endl;
 
-    cout << cha << endl;
-    shortestToChar(cha, 'e');
+    shortestToChar(s, 'e');
 }

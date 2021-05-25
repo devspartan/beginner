@@ -3224,6 +3224,98 @@ int minFallingPathSum(vector<vector<int>> &matrix) {
     return min;
 }
 
+vector<int> mostCompetitive(vector<int> &nums, int k) {
+    int size = nums.size();
+    int len = size;
+    stack<int> st;
+    vector<int> res;
+
+    for (int i = 0; i < size; i++) {
+        while (!res.empty() && res.back() > nums[i] && res.size() + len > k) {
+            res.pop_back();
+        }
+        res.push_back(nums[i]);
+        len--;
+    }
+
+    while (res.size() > k) {
+        res.pop_back();
+    }
+
+    return res;
+}
+
+int kthGrammar(int n, int k) {
+    int i = n - 1;
+    int count = 0;
+    while (i > 0 && k != 1) {
+        long long int size = pow(2, i);
+        if (k > size / 2) {
+            k = k - size / 2;
+            count++;
+        }
+        i--;
+    }
+    return count % 2;
+}
+
+int nextBinarySearch(vector<int> &arr, int target, map<int, int> &mp) {
+    int start = 0;
+    int end = arr.size() - 1;
+    int ans = -1;
+    while (start <= end) {
+        int mid = (start + end) / 2;
+
+        if (arr[mid] <= target)
+            start = mid + 1;
+
+        else {
+            if (mp[mid] > 0) {
+                ans = mid;
+                mp[mid]--;
+            }
+            end = mid - 1;
+        }
+    }
+    return ans;
+}
+
+bool cmpt(pair<int, int> &a, pair<int, int> &b) { return a.second > b.second; }
+vector<int> advantageCount(vector<int> &nums1, vector<int> &nums2) {
+    int size = nums1.size();
+    vector<pair<int, int>> res;
+    vector<pair<int, int>> vp;
+    map<int, int> mp;
+
+    sort(nums1.begin(), nums1.end());
+
+    for (int i = 0; i < size; ++i) {
+        vp.push_back(make_pair(nums2[i], i));
+    }
+
+    sort(vp.begin(), vp.end());
+
+    int j = size - 1;
+    int k = 0;
+    for (int i = size - 1; i >= 0 && j >= 0; i--) {
+        if (nums1[j] > vp[i].first) {
+            res.push_back(make_pair(nums1[j], vp[i].second));
+            j--;
+        } else {
+            res.push_back(make_pair(nums1[k], vp[i].second));
+            k++;
+        }
+    }
+
+    sort(res.begin(), res.end(), cmpt);
+    vector<int> tt;
+    for (int i = size - 1; i >= 0; i--) {
+        tt.push_back(res[i].first);
+    }
+
+    return tt;
+}
+
 int main() {
     int size = 15;
     int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -3244,17 +3336,17 @@ int main() {
                               {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
 
     vector<vector<int>> f = {{9, 9, 4}, {6, 6, 8}, {2, 1, 1}};
-    vector<int> vt = {2, 3, 5};
+    vector<int> vt = {27, 30, 18, 17, 11, 3, 13, 14, 25, 2, 29, 0, 8, 6, 28};
+    vector<int> dt = {9, 2, 17, 24, 14, 15, 10, 6, 13, 25, 29, 28, 18, 27, 4};
     vector<int> rs;
 
     string s = "1212343";
 
-    print2dVect(res2);
-    cout << endl;
-    cout << minFallingPathSum(res2) << endl;
-    ;
-
     printVect(vt);
+    printVect(dt);
+    advantageCount(vt, dt);
+    // cout << kthGrammar(5, 5);
+    // mostCompetitive(vt, 8);
     // cout << subarraySum(vt, 0) << endl;
     // cout << spyDetected(vt) << endl;
     // cout << minOperations(vt, 4);
