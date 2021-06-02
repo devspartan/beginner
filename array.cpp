@@ -3336,7 +3336,7 @@ int main() {
                               {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
 
     vector<vector<int>> f = {{9, 9, 4}, {6, 6, 8}, {2, 1, 1}};
-    vector<int> vt = {27, 30, 18, 17, 11, 3, 13, 14, 25, 2, 29, 0, 8, 6, 28};
+    vector<int> vt = {4, 4, 7, 6, 7};
     vector<int> dt = {9, 2, 17, 24, 14, 15, 10, 6, 13, 25, 29, 28, 18, 27, 4};
     vector<int> rs;
 
@@ -3344,7 +3344,8 @@ int main() {
 
     printVect(vt);
     printVect(dt);
-    advantageCount(vt, dt);
+
+    // advantageCount(vt, dt);
     // cout << kthGrammar(5, 5);
     // mostCompetitive(vt, 8);
     // cout << subarraySum(vt, 0) << endl;

@@ -238,36 +238,40 @@ bool isInterleave(string s1, string s2, string s3) {
     return true;
 }
 
-bool isInterleaveDPhelper(string s1, string s2, string s3, int i, int j,
-                          string res, int **dp) {
-    if (res == s3 && i == s1.length() && j == s2.length()) {
+bool isInterleaveDPhelper(string s1, string s2, string s3, int i, int j, int k,
+                          int **dp) {
+    if (k >= s3.length()) {
         return true;
     }
 
-    if (dp[i][j] != -1) {
+    if (i < s1.length() && j < s2.length() && dp[i][j] == 1) {
         return (dp[i][j] == 1);
     }
 
-    bool ans = false;
-    if (i < s1.length()) {
-
-        ans = isInterleaveDPhelper(s1, s2, s3, i + 1, j, res + s1.at(i), dp) &&
-              true;
+    bool a1 = false, a2 = false;
+    if (i < s1.length() && s1[i] == s3[k]) {
+        a1 = isInterleaveDPhelper(s1, s2, s3, i + 1, j, k + 1, dp);
     }
-    if (j < s2.length()) {
-        ans = isInterleaveDPhelper(s1, s2, s3, i, j + 1, res + s2.at(j), dp) &&
-              true;
+    if (j < s2.length() && s2[j] == s3[k]) {
+        a2 = isInterleaveDPhelper(s1, s2, s3, i, j + 1, k + 1, dp);
     }
 
-    dp[i][j] = ans == true ? 1 : 0;
-    return ans;
+    // cout << a1 << a1 << "  " << i << " " << j << "  " << k << endl;
+
+    if (a1 || a2) {
+        if (i < s1.length() && j < s2.length()) {
+            dp[i][j] = 1;
+        }
+        return true;
+    }
+
+    return false;
 }
 
 bool isInterleaveDP(string s1, string s2, string s3) {
     int m = s1.length();
     int n = s2.length();
     int k = s3.length();
-    cout << "im herer ";
 
     if (m + n != k) {
         return false;
@@ -279,14 +283,19 @@ bool isInterleaveDP(string s1, string s2, string s3) {
     for (int i = 0; i < m; i++) {
         dp[i] = new int[n];
         for (int j = 0; j < n; j++) {
-            dp[i][j] = -1;
+            dp[i][j] = 0;
         }
     }
-
     string res = "";
-    bool ans = isInterleaveDPhelper(s1, s2, s3, 0, 0, res, dp);
+    bool ans = isInterleaveDPhelper(s1, s2, s3, 0, 0, 0, dp);
 
-    return true;
+    // for (int i = 0; i < m; i++) {
+    //     for (int j = 0; j < n; j++) {
+    //         cout << dp[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    return ans;
 }
 
 int countCharacters(vector<string> &words, string chars) {
@@ -876,16 +885,261 @@ int longestPalindromeSubseq(string s) {
     return dp[0][len - 1];
 }
 
+int evalRPN(vector<string> &tokens) {
+    stack<int> st;
+    int size = tokens.size();
+    int res = 0;
+
+    for (int i = 0; i < size; i++) {
+        string s = tokens[i];
+        if (s == "/") {
+            int t2 = st.top();
+            st.pop();
+            int t1 = st.top();
+            st.pop();
+            int t3 = t1 / t2;
+            st.push(t3);
+        } else if (s == "*") {
+            int t1 = st.top();
+            st.pop();
+            int t2 = st.top();
+            st.pop();
+            int t3 = t1 * t2;
+            st.push(t3);
+        } else if (s == "+") {
+            int t1 = st.top();
+            st.pop();
+            int t2 = st.top();
+            st.pop();
+            int t3 = t1 + t2;
+            st.push(t3);
+        } else if (s == "-") {
+            int t2 = st.top();
+            st.pop();
+            int t1 = st.top();
+            st.pop();
+            int t3 = t1 - t2;
+            st.push(t3);
+        } else {
+            stringstream geek(s);
+            int x = 0;
+            geek >> x;
+            st.push(x);
+        }
+    }
+    return st.top();
+}
+
+string breakPalindrome(string s) {
+    int size = s.length();
+    int mid = size + 1;
+    bool gotcha = false;
+    if (size % 2 != 0) {
+        mid = (size / 2);
+    }
+
+    for (int i = 0; i < size; i++) {
+        if (s[i] != 'a' && i != mid) {
+            s[i] = 'a';
+            gotcha = true;
+            break;
+        }
+    }
+
+    if (size >= 2 && gotcha == false) {
+        s[size - 1] = 'b';
+        gotcha = true;
+    }
+
+    return gotcha ? s : "";
+}
+
+vector<bool> canMakePaliQueries(string s, vector<vector<int>> &q) {
+    int len = s.length();
+    int size = q.size();
+    vector<vector<int>> vt(len, vector<int>(26, 0));
+
+    for (int i = 0; i < len; i++) {
+        if (i != 0) {
+            for (int j = 0; j < 26; j++) {
+                vt[i][j] += vt[i - 1][j];
+            }
+        }
+        vt[i][s[i] - 97]++;
+    }
+
+    vector<bool> res;
+    for (int i = 0; i < size; i++) {
+        vector<int> hash;
+        int tempSize = q[i][1] - q[i][0] + 1;
+        int oddCount = 0;
+        for (int j = 0; j < 26; j++) {
+            int temp;
+            if (q[i][0] == 0) {
+                temp = vt[q[i][1]][j];
+            } else {
+                temp = vt[q[i][1]][j] - vt[q[i][0] - 1][j];
+            }
+
+            if (temp % 2 == 1) {
+                oddCount++;
+            }
+        }
+
+        if (tempSize % 2 == 0) {
+            if (q[i][2] >= oddCount / 2) {
+                res.push_back(true);
+            } else {
+                res.push_back(false);
+            }
+        } else {
+            if (q[i][2] >= oddCount / 2) {
+                res.push_back(true);
+            } else {
+                res.push_back(false);
+            }
+        }
+    }
+
+    return res;
+}
+
+int LCSRecursiveUtil(string s1, string s2, int i, int j, int **dp) {
+    if (i >= s1.length() || j >= s2.length()) {
+        return 0;
+    }
+
+    if (dp[i][j]) {
+        return dp[i][j];
+    }
+
+    cout << "fun call" << endl;
+
+    if (s1[i] == s2[j]) {
+        int temp = 1 + LCSRecursiveUtil(s1, s2, i + 1, j + 1, dp);
+        dp[i][j] = temp;
+        return temp;
+    }
+
+    int temp = max(LCSRecursiveUtil(s1, s2, i + 1, j, dp),
+                   LCSRecursiveUtil(s1, s2, i, j + 1, dp));
+    dp[i][j] = temp;
+    return temp;
+}
+
+int LCSRec(string s1, string s2) {
+    int l1 = s1.length();
+    int l2 = s2.length();
+
+    int **dp = new int *[l1];
+
+    for (int i = 0; i < l1; i++) {
+        dp[i] = new int[l2];
+    }
+
+    for (int i = 0; i < l1; i++) {
+        for (int j = 0; j < l2; j++) {
+            dp[i][j] = 0;
+        }
+    }
+
+    return LCSRecursiveUtil(s1, s2, 0, 0, dp);
+}
+
+int LCSDp(string s1, string s2) {
+    int l1 = s1.length();
+    int l2 = s2.length();
+
+    int **dp = new int *[l1 + 1];
+
+    for (int i = 0; i <= l1; i++) {
+        dp[i] = new int[l2 + 1];
+    }
+
+    for (int i = 0; i <= l1; i++) {
+        for (int j = 0; j <= l2; j++) {
+            dp[i][j] = 0;
+        }
+    }
+
+    for (int i = 1; i <= l1; i++) {
+        for (int j = 1; j <= l2; j++) {
+            if (s1[i - 1] == s2[j - 1]) {
+                dp[i][j] = 1 + dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    return dp[l1][l2];
+}
+
+bool compareInterval(string i1, string i2) {
+    return (i1.length() < i2.length());
+}
+
+int maxProduct(vector<string> &words) {
+    int size = words.size();
+
+    vector<vector<int>> vt(size, vector<int>(26, 0));
+
+    sort(words.begin(), words.end(), compareInterval);
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < words[i].length(); j++) {
+            vt[i][words[i][j] - 97]++;
+        }
+    }
+
+    int max = 0;
+    for (int i = size - 1; i > 0; i--) {
+        for (int j = i - 1; j >= 0; j--) {
+            bool check = true;
+            for (int k = 0; k < 26; k++) {
+                if (vt[i][k] > 0 && vt[j][k] > 0) {
+                    check = false;
+                    break;
+                }
+            }
+
+            if (check) {
+                int temp = words[i].length() * words[j].length();
+
+                if (temp > max) {
+                    max = temp;
+                }
+
+                break;
+            }
+        }
+    }
+
+    return max;
+}
+
 int main() {
 
-    vector<string> vt = {"time", "me", "ime", "bell", "be", "ell"};
+    vector<string> vt = {"abcw", "baz", "foo", "bar", "xtfn", "abcdef"};
     string str = "01110";
     string parenthesis = "()(((()())(";
-    string s = "";
-    vector<string> pt = {"car", "cir"};
+    string s;
+    string v;
+    string t;
 
     cin >> s;
-    cout << longestPalindromeSubseq(s) << endl;
+    cin >> v;
+    cin >> t;
+
+    cout << isInterleaveDP(s, v, t) << endl;
+    // cout << maxProduct(vt) << endl;
+    // cout << LCSDp(s, v) << endl;
+    // vector<vector<int>> queries = {
+    //     {3, 3, 0}, {1, 2, 0}, {0, 3, 1}, {0, 3, 2}, {0, 4, 1}};
+    // canMakePaliQueries(s, queries);
+    // cout << breakPalindrome(s);
+    // cout << evalRPN(pt);
+    // cout << longestPalindromeSubseq(s) << endl;
     // cout << longestPalindromeSubseqRec(s, 0, s.length() - 1) << endl;
     // cout << countSubstrings(s) << endl;
     // cout << canConstruct(s, 2) << endl;
@@ -916,5 +1170,5 @@ int main() {
     // cout << "parenthieses: " << longestValidParenthesisStack(parenthesis) <<
     // endl; cout << countCharacters(vt, s) << endl;
 
-    shortestToChar(s, 'e');
+    // shortestToChar(s, 'e');
 }
