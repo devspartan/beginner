@@ -56,6 +56,7 @@ class LinkList {
     void deleteWithoutHead(Node *node);
     Node *removeNthFromEnd(Node *head, int n);
     LinkListIterator getIterator();
+    void reorderList(Node *head);
 };
 
 LinkList::LinkList() {
@@ -622,18 +623,40 @@ Node *swapNodes(Node *head, int k) {
     return head;
 }
 
+Node *reorderListUtil(Node *t1, Node *t2) {
+    if (t2 == NULL) {
+        return t1;
+    }
+    Node *t = reorderListUtil(t1, t2->next);
+    if (t == NULL) {
+        return NULL;
+    }
+    if (t == t2 || t->next == t2) {
+        t2->next = NULL;
+        return NULL;
+    }
+    Node *temp = t->next;
+    t->next = t2;
+    t2->next = temp;
+    return temp;
+}
+void LinkList::reorderList(Node *head) {
+    Node *temp = head;
+    Node *tt = reorderListUtil(temp, temp);
+}
+
 int main() {
     vector<int> vt = {1, 2};
-    vector<int> vt2 = {2, 4, 6, 6, 7, 7, 21};
+    vector<int> vt2 = {1, 2, 3, 4, 5, 6, 7};
     LinkList ll, l2;
 
-    for (int i = 0; i < vt.size(); i++) {
-        ll.insert(vt[i]);
+    for (int i = 0; i < vt2.size(); i++) {
+        ll.insert(vt2[i]);
         // l2.insert(vt2[i]);
     }
 
     ll.print();
-    ll.start = swapNodes(ll.start, 2);
+    ll.reorderList(ll.start);
     ll.print();
     // cout << isPalindrome(ll.start) << endl;
     // Node *r = mergeTwoLists(ll.start, l2.start);

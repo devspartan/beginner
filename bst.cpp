@@ -119,14 +119,15 @@ void BST::inorderWithoutRec() {
 void BST::levelOrderTraversal() {
     queue<Node *> q;
     Node *temp = root;
-    while (temp != NULL) {
+    q.push(temp);
+    while (temp != NULL && !q.empty()) {
+        temp = q.front();
+        q.pop();
         cout << temp->data << " ";
         if (temp->left != NULL)
             q.push(temp->left);
         if (temp->right != NULL)
             q.push(temp->right);
-        temp = q.front();
-        q.pop();
     }
     cout << " level order traversal " << endl;
 }
@@ -953,21 +954,115 @@ int BST::pseudoPalindromicPaths() {
     return pseudoPalindromicPathsUtil(temp, ump);
 }
 
-// Node *recoverFromPreorder(string t) {}
+vector<int> inorderTraversalStack(Node *root) {
+    vector<int> res;
+    if (root == NULL) {
+        return res;
+    }
+
+    stack<Node *> st;
+    Node *curr = root;
+
+    while (curr != NULL || st.empty() == false) {
+        while (curr != NULL) {
+            st.push(curr);
+            curr = curr->left;
+        }
+
+        curr = st.top();
+        st.pop();
+        res.push_back(curr->data);
+        curr = curr->right;
+    }
+
+    return res;
+}
+
+int kthSmallest(Node *root, int k) {
+    stack<Node *> st;
+    Node *curr = root;
+    int res;
+    while (curr != NULL || st.empty() == false) {
+        while (curr != NULL) {
+            st.push(curr);
+            curr = curr->left;
+        }
+
+        curr = st.top();
+        st.pop();
+        k--;
+        if (k == 0) {
+            res = curr->data;
+            break;
+        }
+        curr = curr->right;
+    }
+    return res;
+}
+
+vector<vector<int>> zigzagLevelOrder(Node *root) {
+    vector<vector<int>> res;
+
+    if (root == NULL) {
+        return res;
+    }
+
+    Node *temp = root;
+    deque<Node *> q;
+    deque<Node *> q2;
+    q.push_back(temp);
+    bool check = false;
+    while (!q.empty()) {
+        check = !check;
+        vector<int> rt;
+        while (!q.empty()) {
+            Node *tt;
+            tt = q.back();
+            cout << tt->data << " ";
+            rt.push_back(tt->data);
+            q.pop_back();
+            if (check) {
+                if (tt->left != NULL) {
+                    q2.push_back(tt->left);
+                }
+                if (tt->right != NULL) {
+                    q2.push_back(tt->right);
+                }
+            } else {
+                if (tt->right != NULL) {
+                    q2.push_back(tt->right);
+                }
+                if (tt->left != NULL) {
+                    q2.push_back(tt->left);
+                }
+            }
+        }
+
+        while (!q2.empty()) {
+            q.push_back(q2.front());
+            q2.pop_front();
+        }
+        res.push_back(rt);
+        cout << endl;
+    }
+
+    return res;
+}
+
+vector<int> preorderTraversalStack(Node *root) {}
 
 int main() {
     BST bt1;
     BST bt2;
     int size = 16;
     int size2 = 9;
-    vector<int> arr = {2, 3, 1, 3, 2, 2, 4};
+    vector<int> arr = {2, 3, 1, 3, 2, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16};
     int arr2[size2] = {4, 2, 7, 5, 6, 1, 3, 2, 4};
     Node *temp = NULL;
-    // for (int i = 0; i < arr.size(); i++) {
-    //     bt2.bt(arr2[i]);
-    // }
+
     bt1.levelTree(arr, arr.size());
     bt1.levelOrderTraversal();
+    bt1.reverseLvelOrderTraversal();
     // bt1.inorderWithoutRec();
     // levelOrder(bt1.root);
     // Node *tt = bt1.sortedArrayToBST(arr, 0, arr.size() - 1);
@@ -976,7 +1071,10 @@ int main() {
     vector<int> v2;
     vector<int> v3;
 
-    bt1.pseudoPalindromicPaths();
+    cout << ">>>>>----------->>>>>>" << endl;
+    zigzagLevelOrder(bt1.root);
+    // inorderTraversalStack(bt1.root);
+    // bt1.pseudoPalindromicPaths();
     // cout << bt1.isSymmetric(bt1.root) << endl;
     // bt1.addOneRow(bt1.root, -2, 5);
     // cout << bt1.isValidBST(bt1.root) << endl;

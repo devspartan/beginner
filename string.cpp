@@ -119,14 +119,11 @@ int longestValidParenthesis(string str) {
     int maxlen = 0;
     int len = 0;
     for (int i = 0; i < size; i++) {
-
         if (str[i] == '(') {
             open++;
         } else {
             close++;
         }
-        // cout << "i " << i << "  op: " << open << " " << "clos: " << close <<
-        // " mxl " << maxlen << endl;
         len++;
 
         if (close == open) {
@@ -289,12 +286,6 @@ bool isInterleaveDP(string s1, string s2, string s3) {
     string res = "";
     bool ans = isInterleaveDPhelper(s1, s2, s3, 0, 0, 0, dp);
 
-    // for (int i = 0; i < m; i++) {
-    //     for (int j = 0; j < n; j++) {
-    //         cout << dp[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
     return ans;
 }
 
@@ -1118,20 +1109,178 @@ int maxProduct(vector<string> &words) {
     return max;
 }
 
+bool isValid(string s) {
+    stack<char> st;
+    int len = s.length();
+    bool res = true;
+    for (int i = 0; i < len; i++) {
+        if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
+            st.push(s[i]);
+        } else {
+            if (!st.empty()) {
+                if (s[i] == ')') {
+                    if (st.top() == '(') {
+                        st.pop();
+                    } else {
+                        res = false;
+                        break;
+                    }
+                } else if (s[i] == '}') {
+                    if (st.top() == '{') {
+                        st.pop();
+                    } else {
+                        res = false;
+                        break;
+                    }
+                } else if (s[i] == ']') {
+                    if (st.top() == '[') {
+                        st.pop();
+                    } else {
+                        res = false;
+                        break;
+                    }
+                }
+            } else {
+                res = false;
+                break;
+            }
+        }
+    }
+
+    if (res == true && !st.empty()) {
+        res = false;
+    }
+
+    return res;
+}
+
+string simplifyPath(string path) {
+    int len = path.length();
+
+    deque<string> qq;
+    string res;
+    int i = 0;
+    while (i < len) {
+        string temp;
+        if (path[i] == '/') {
+            i++;
+            continue;
+        }
+
+        while (i < len && path[i] != '/') {
+            temp += path[i];
+            i++;
+        }
+
+        cout << temp << endl;
+        if (temp == ".") {
+            continue;
+        } else if (!qq.empty() && temp == "..") {
+            qq.pop_back();
+        } else if (temp != "..") {
+            qq.push_back(temp);
+        }
+    }
+
+    while (!qq.empty()) {
+        res += '/' + qq.front();
+        qq.pop_front();
+    }
+
+    return res == "" ? "/" : res;
+}
+
+int count(string a, string b, int m, int n) {
+
+    if ((m == 0 && n == 0) || n == 0)
+        return 1;
+
+    if (m == 0)
+        return 0;
+
+    if (a[m - 1] == b[n - 1] || a[m - 1] == 2 && b[n - 1] == 5 ||
+        a[m - 1] == 5 && b[n - 1] == 2 || a[m - 1] == 6 && b[n - 1] == 9 ||
+        a[m - 1] == 9 && b[n - 1] == 6)
+        return count(a, b, m - 1, n - 1) + count(a, b, m - 1, n);
+    else
+        return count(a, b, m - 1, n);
+}
+
+int strToNum(string s) {
+    stringstream geek(s);
+    int x = 0;
+    geek >> x;
+
+    return x;
+}
+
+int maximum_count(int N, int S, string M) {
+    ostringstream str1;
+    str1 << N;
+    string num = str1.str();
+
+    // for(int i = 0; i < num.length(); i++) {
+    //     if(num[i] == '5') {
+    //         num[i] = '2';
+    //     } else if(num[i] == '6') {
+    //         num[i] = '9';
+    //     }
+    // }
+
+    // for(int i = 0; i < M.length(); i++) {
+    //     if(M[i] == '5') {
+    //         M[i] = '2';
+    //     } else if(M[i] == '6') {
+    //         M[i] = '9';
+    //     }
+    // }
+    cout << M << "  " << num << " " << num.length() << endl;
+    int res = count(M, num, S, num.length());
+
+    return res;
+}
+
+int numberOfRounds(string startTime, string finishTime) {
+
+    int ht1 = strToNum(startTime.substr(0, 2));
+    int mt1 = strToNum(startTime.substr(3, 4));
+    int ht2 = strToNum(finishTime.substr(0, 2));
+    int mt2 = strToNum(finishTime.substr(3, 4));
+
+    int m1 = (mt1 % 15 == 0 ? mt1 / 15 : mt1 / 15 + 1);
+    int m2 = (mt2 % 15 == 0 ? mt2 / 15 : mt2 / 15);
+
+    cout << ht1 << " : " << m1 << "  " << ht2 << " : " << m2 << endl;
+    int t = ht1 * 60 + mt1;
+    int y = ht2 * 60 + mt2;
+    cout << t << " " << y << endl;
+
+    if (t <= y) {
+        cout << ht1 * 4 + m1 << "  " << ht2 * 4 + m2 << endl;
+        return (ht2 * 4 + m2) - (ht1 * 4 + m1);
+    } else {
+        cout << 96 - (ht1 * 4 + m1) << "  " << ht2 * 4 + m2 << endl;
+        return (96 - (ht1 * 4 + m1)) + (ht2 * 4 + m2);
+    }
+}
+
 int main() {
 
     vector<string> vt = {"abcw", "baz", "foo", "bar", "xtfn", "abcdef"};
     string str = "01110";
     string parenthesis = "()(((()())(";
-    string s;
-    string v;
+    string s = "00:01";
+    string v = "00:00";
     string t;
 
-    cin >> s;
-    cin >> v;
-    cin >> t;
+    // cin >> s;
+    // cin >> v;
+    // cin >> t;
 
-    cout << isInterleaveDP(s, v, t) << endl;
+    cout << numberOfRounds(s, v);
+    // cout << maximum_count(56, 6, "245769") << endl;
+    // cout << simplifyPath(s) << endl;
+    // cout << isValid(s) << endl;
     // cout << maxProduct(vt) << endl;
     // cout << LCSDp(s, v) << endl;
     // vector<vector<int>> queries = {

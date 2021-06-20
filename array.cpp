@@ -2,6 +2,8 @@
 
 using namespace std;
 
+long long int MODULO = 1000000007;
+
 void printArr(int arr[], int size) {
     for (int i = 0; i < size; i++) {
         cout << arr[i] << " ";
@@ -3281,6 +3283,7 @@ int nextBinarySearch(vector<int> &arr, int target, map<int, int> &mp) {
 }
 
 bool cmpt(pair<int, int> &a, pair<int, int> &b) { return a.second > b.second; }
+
 vector<int> advantageCount(vector<int> &nums1, vector<int> &nums2) {
     int size = nums1.size();
     vector<pair<int, int>> res;
@@ -3316,6 +3319,176 @@ vector<int> advantageCount(vector<int> &nums1, vector<int> &nums2) {
     return tt;
 }
 
+int maxArea(int h, int w, vector<int> &hs, vector<int> &vs) {
+
+    sort(hs.begin(), hs.end());
+    sort(vs.begin(), vs.end());
+
+    hs.push_back(h);
+    vs.push_back(w);
+
+    int hSize = hs.size();
+    int vSize = vs.size();
+    long long int maxH = hs[0];
+    long long int maxV = vs[0];
+    long long int temp;
+    for (int i = 1; i < hSize; i++) {
+        temp = hs[i] - hs[i - 1];
+        if (temp > maxH) {
+            maxH = temp;
+        }
+    }
+    for (int i = 1; i < vSize; i++) {
+        temp = vs[i] - vs[i - 1];
+        if (temp > maxV) {
+            maxV = temp;
+        }
+    }
+    return ((maxH % MODULO) * (maxV % MODULO)) % MODULO;
+}
+
+string removeOuterParentheses(string s) {
+    stack<char> st;
+
+    int len = s.length();
+    string res;
+
+    for (int i = 0; i < len; i++) {
+        if (s[i] == '(') {
+            st.push(s[i]);
+        } else {
+            char c = st.top();
+            st.pop();
+            if (!st.empty()) {
+                res += c;
+                res += s[i];
+            }
+        }
+    }
+
+    return res;
+}
+
+vector<int> spiralOrder(vector<vector<int>> &mt) {
+
+    int m = mt.size();
+    int n = mt[0].size();
+    int size = m * n;
+    int check = 0;
+    int a = 0, b = n, c = 0;
+    int cnt = 0;
+    vector<int> res;
+    while (res.size() < size) {
+        if (check == 0) {
+            for (int j = a; j < b; j++) {
+                // cout << mt[c][j] << " ";
+                res.push_back(mt[c][j]);
+            }
+            cout << endl;
+            a = c + 1;
+            c = b - 1;
+            b = m - cnt;
+            check = 1;
+        } else if (check == 1) {
+            for (int j = a; j < b; j++) {
+                cout << mt[j][c] << " ";
+                res.push_back(mt[j][c]);
+            }
+            // cout << endl;
+            a = c - 1;
+            c = b - 1;
+            check = 2;
+            b = cnt;
+        } else if (check == 2) {
+            for (int j = a; j >= b; j--) {
+                // cout << mt[c][j] << " ";
+                res.push_back(mt[c][j]);
+            }
+            // cout << endl;
+            a = c - 1;
+            c = b;
+            b = cnt + 1;
+            check = 3;
+
+        } else if (check == 3) {
+
+            for (int j = a; j >= b; j--) {
+                // cout << mt[j][c] << " ";
+                res.push_back(mt[j][c]);
+            }
+            // cout << endl;
+            a = c + 1;
+            c = b;
+            check = 0;
+            cnt++;
+            b = n - cnt;
+        }
+    }
+    return res;
+}
+
+vector<vector<int>> generateMatrix(int n) {
+
+    vector<vector<int>> mt(n, vector<int>(n));
+    int size = n * n;
+    int check = 0;
+    int a = 0, b = n, c = 0;
+    int cnt = 0;
+    int count = 1;
+    while (count <= n * n) {
+        if (check == 0) {
+            for (int j = a; j < b; j++) {
+                // cout << mt[c][j] << " ";
+                mt[c][j] = count++;
+            }
+            // cout << endl;
+            a = c + 1;
+            c = b - 1;
+            b = n - cnt;
+            check = 1;
+        } else if (check == 1) {
+            for (int j = a; j < b; j++) {
+                // cout << mt[j][c] << " ";
+                mt[j][c] = count++;
+            }
+            // cout << endl;
+            a = c - 1;
+            c = b - 1;
+            check = 2;
+            b = cnt;
+        } else if (check == 2) {
+            for (int j = a; j >= b; j--) {
+                // cout << mt[c][j] << " ";
+                mt[c][j] = count++;
+            }
+            // cout << endl;
+            a = c - 1;
+            c = b;
+            b = cnt + 1;
+            check = 3;
+
+        } else if (check == 3) {
+
+            for (int j = a; j >= b; j--) {
+                // cout << mt[j][c] << " ";
+                mt[j][c] = count++;
+            }
+            // cout << endl;
+            a = c + 1;
+            c = b;
+            check = 0;
+            cnt++;
+            b = n - cnt;
+        }
+    }
+
+    // print2dVect(mt);
+    return mt;
+}
+
+vector<vector<int>> spiralMatrixIII(int rows, int cols, int rStart,
+                                    int cStart) {}
+
 int main() {
     int size = 15;
     int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -3331,20 +3504,24 @@ int main() {
     vector<int> sd = {1, 4,  63, 6, 5,  12, 47,  56, 71, 5,  63, 15, 57, 12,
                       1, 63, 5,  0, 67, 5,  178, 8,  6,  94, 5,  47, 69, 8};
 
-    vector<vector<int>> ct = {{1, 1, 9, 1, 7, 5}, {2, 4, 8, 0, 6, 4},
-                              {3, 3, 6, 7, 4, 1}, {1, 4, 2, 6, 2, 9},
-                              {5, 4, 6, 3, 6, 8}, {1, 8, 7, 9, 2, 4}};
+    vector<vector<int>> ct = {
+        {1, 1, 9, 1, 7, 5},
+        {2, 4, 8, 0, 6, 4},
+    };
 
     vector<vector<int>> f = {{9, 9, 4}, {6, 6, 8}, {2, 1, 1}};
     vector<int> vt = {4, 4, 7, 6, 7};
     vector<int> dt = {9, 2, 17, 24, 14, 15, 10, 6, 13, 25, 29, 28, 18, 27, 4};
     vector<int> rs;
 
-    string s = "1212343";
+    string s;
+    // cin >> s;
 
-    printVect(vt);
-    printVect(dt);
-
+    generateMatrix(10);
+    // spiralOrder(ct);
+    // printVect(vt);
+    // printVect(dt);
+    // cout << removeOuterParentheses(s) << endl;
     // advantageCount(vt, dt);
     // cout << kthGrammar(5, 5);
     // mostCompetitive(vt, 8);
