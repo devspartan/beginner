@@ -781,7 +781,7 @@ int removeElement(vector<int> &nums, int val) {
 
 int binarySearch(vector<int> arr, int l, int r, int x) {
     if (r >= l) {
-        int mid = l + (r - l) / 2;
+        int mid = (r + l) / 2;
 
         if (arr[mid] == x)
             return mid;
@@ -1003,13 +1003,6 @@ int uniquePathsWithObstacles(vector<vector<int>> &arr) {
             arr[i][j] = arr[i][j] == 1 ? 0 : arr[i - 1][j] + arr[i][j - 1];
         }
     }
-
-    // for(int i = 0; i < m; i++) {
-    //     for(int j = 0; j < n; j++) {
-    //         cout << arr[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
 
     return arr[m - 1][n - 1];
 }
@@ -2222,6 +2215,17 @@ void rotate(vector<int> &arr, int k) {
     }
 }
 
+void rotate(vector<int> &arr) {
+    int n = arr.size();
+    int carry = arr[n - 1];
+    int current = arr[0];
+    for (int i = 0; i < n; i++) {
+        current = arr[i];
+        arr[i] = carry;
+        carry = current;
+    }
+}
+
 bool containsDuplicate(vector<int> &nums) {
     unordered_map<int, int> mp;
     for (int i = 0; i < nums.size(); i++) {
@@ -3381,42 +3385,33 @@ vector<int> spiralOrder(vector<vector<int>> &mt) {
     while (res.size() < size) {
         if (check == 0) {
             for (int j = a; j < b; j++) {
-                // cout << mt[c][j] << " ";
                 res.push_back(mt[c][j]);
             }
-            cout << endl;
             a = c + 1;
             c = b - 1;
             b = m - cnt;
             check = 1;
         } else if (check == 1) {
             for (int j = a; j < b; j++) {
-                cout << mt[j][c] << " ";
                 res.push_back(mt[j][c]);
             }
-            // cout << endl;
             a = c - 1;
             c = b - 1;
             check = 2;
             b = cnt;
         } else if (check == 2) {
             for (int j = a; j >= b; j--) {
-                // cout << mt[c][j] << " ";
                 res.push_back(mt[c][j]);
             }
-            // cout << endl;
             a = c - 1;
             c = b;
             b = cnt + 1;
             check = 3;
 
         } else if (check == 3) {
-
             for (int j = a; j >= b; j--) {
-                // cout << mt[j][c] << " ";
                 res.push_back(mt[j][c]);
             }
-            // cout << endl;
             a = c + 1;
             c = b;
             check = 0;
@@ -3486,8 +3481,310 @@ vector<vector<int>> generateMatrix(int n) {
     return mt;
 }
 
-vector<vector<int>> spiralMatrixIII(int rows, int cols, int rStart,
-                                    int cStart) {}
+int maxScore(vector<int> &arr, int k) {
+    int size = arr.size();
+    int req = size - k;
+
+    int sum = 0;
+    int totalSum = 0;
+    for (int i = 0; i < req; i++) {
+        sum += arr[i];
+        totalSum += arr[i];
+    }
+
+    int j = 0;
+    int minSum = sum;
+    for (int i = req; i < size; i++) {
+        sum = sum + arr[i] - arr[j];
+        totalSum += arr[i];
+        minSum = min(minSum, sum);
+        j++;
+    }
+
+    return totalSum - minSum;
+}
+
+bool canJump(vector<int> &nums) {
+    int dis = 0;
+    for (int i = 0; i <= dis; i++) {
+        dis = max(dis, i + nums[i]);
+        if (dis >= nums.size() - 1) {
+            return true;
+        }
+    }
+    return false;
+}
+
+long int jumpUtil(vector<int> &nums, int i, vector<int> &dp) {
+    int size = nums.size();
+
+    if (i == size - 1) {
+        return 0;
+    }
+
+    if (dp[i] != -1) {
+        return dp[i];
+    }
+
+    long int res = INT32_MAX;
+    for (int j = 1; j <= nums[i]; j++) {
+        if (i + j <= size - 1) {
+            // cout << i << " i " << nums[i] << " j " << nums[i + j] << endl;
+            long int chk = jumpUtil(nums, i + j, dp) + 1;
+            // cout << res << " " << chk << endl;
+            res = min(chk, res);
+        }
+    }
+
+    dp[i] = res;
+    return res;
+}
+
+int jump(vector<int> &nums) {
+    int size = nums.size();
+    vector<int> dp(size, -1);
+
+    return jumpUtil(nums, 0, dp);
+}
+
+int minJumps(vector<int> &arr) {
+    // { 1, 3, 5, 8, 9, 2, 6, 7, 6, 8, 9 }
+    // { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+    // {1, 2, 1, 1, 1, 0}
+    // {0, 1, 2, 3, 4, 5}
+    int n = arr.size();
+    int count = 0;
+    int far = 0;
+    int end = 0;
+    for (int i = 0; i < n; i++) {
+        far = max(far, i + arr[i]);
+        if (i == end) {
+            count++;
+            end = far;
+        }
+
+        if (end >= n - 1) {
+            break;
+        }
+    }
+
+    if (end < n - 1) {
+        return -1;
+    }
+
+    return count;
+}
+
+void merge(vector<int> &arr1, vector<int> &arr2) {
+    int n = arr1.size();
+    int m = arr2.size();
+
+    int j = 0, k = 0;
+    int count = 0;
+    while (j < n && k < m) {
+        if (arr1[j] <= arr2[k]) {
+            j++;
+            count++;
+        } else {
+            k++;
+            count++;
+        }
+
+        if (count == n) {
+            for (int i = j; i < n; i++) {
+                int t = arr1[i];
+                arr1[i] = arr2[k - 1];
+                arr2[k - 1] = t;
+                k--;
+            }
+
+            sort(arr1.begin(), arr1.end());
+            sort(arr2.begin(), arr2.end());
+
+            break;
+        }
+    }
+
+    // code here
+}
+
+bool mergeCmp(vector<int> &a, vector<int> &b) {
+    if (a[0] == b[0]) {
+        return a[0] < b[0];
+    }
+    return a[0] < b[0];
+}
+
+vector<vector<int>> merge(vector<vector<int>> &tt) {
+
+    int size = tt.size();
+    vector<vector<int>> res;
+    if (size == 0) {
+        return res;
+    }
+
+    sort(tt.begin(), tt.end(), mergeCmp);
+
+    int st = tt[0][0];
+    int maxEnd = -1;
+    for (int i = 0; i < size; i++) {
+        if (st == -1) {
+            st = tt[i][0];
+        }
+
+        maxEnd = max(maxEnd, tt[i][1]);
+
+        if (maxEnd >= tt[i][0]) {
+            continue;
+        } else {
+            vector<int> temp = {st, tt[i][1]};
+            st = -1;
+            res.push_back(temp);
+        }
+    }
+
+    return res;
+}
+
+bool subArrayExists(vector<int> arr) {
+    int n = arr.size();
+    int size = arr.size();
+
+    unordered_map<long int, long int> mp;
+
+    long long int sum = 0;
+    mp[0] = 1;
+    for (int i = 0; i < size; i++) {
+        sum += arr[i];
+        if (mp[sum] != 0) {
+            return true;
+        }
+        mp[sum] = 1;
+    }
+
+    return false;
+}
+
+void nextPermutation(vector<int> &nums) {
+
+    int size = nums.size();
+    vector<int> hash(101, 0);
+    for (int i = size - 1; i >= 0; i--) {
+        int mint = 1000;
+        int idx = -1;
+        for (int j = i + 1; j < size; j++) {
+            if (nums[j] > nums[i]) {
+                mint = min(mint, nums[j]);
+                idx = j;
+            }
+        }
+
+        if (idx != -1) {
+            int temp = nums[i];
+            nums[i] = nums[idx];
+            nums[idx] = temp;
+            partial_sort(nums.begin() + i + 1, nums.end(), nums.end());
+            return;
+        }
+    }
+
+    sort(nums.begin(), nums.end());
+
+    return;
+}
+
+int searchMatrixBinarySearch(vector<vector<int>> arr, int l, int r, int x) {
+    int size = arr[0].size();
+
+    cout << l << " " << r << endl;
+    if (r >= l) {
+        int mid = (r + l) / 2;
+        int i = mid / size;
+        int j = mid - size * i;
+
+        cout << mid << "   " << i << " " << j << endl;
+        if (arr[i][j] == x)
+            return mid;
+
+        if (arr[i][j] > x)
+            return searchMatrixBinarySearch(arr, l, mid - 1, x);
+
+        return searchMatrixBinarySearch(arr, mid + 1, r, x);
+    }
+
+    return -1;
+}
+
+bool searchMatrix(vector<vector<int>> &matrix, int target) {
+    int i = matrix.size();
+    int j = matrix[0].size();
+    int l = 0;
+    int r = i * j - 1;
+
+    int res = searchMatrixBinarySearch(matrix, l, r, target);
+    cout << res;
+    return true;
+}
+
+int rowWithMax1s(vector<vector<int>> arr, int n, int m) {
+
+    int idx = m - 1;
+    int j = idx;
+    int count = 0;
+    int maxd = INT32_MIN;
+    int resIdx = -1;
+    for (int i = 0; i < n; i++) {
+        while (j >= 0 && arr[i][j] == 1) {
+            j--;
+            count++;
+        }
+
+        if (count > maxd) {
+            maxd = count;
+            resIdx = i;
+        }
+    }
+
+    return resIdx;
+}
+
+void printCommonElements(vector<vector<int>> &arr) {
+    int m = arr.size();
+    int n = arr[0].size();
+
+    unordered_map<int, int> mp;
+    for (int i = 0; i < m; i++) {
+        unordered_map<int, int> hash;
+        for (int j = 0; j < n; j++) {
+            hash[arr[i][j]]++;
+            if (hash[arr[i][j]] == 1) {
+                mp[arr[i][j]]++;
+            }
+
+            if (hash[arr[i][j]] == 1 && i == m - 1 && mp[arr[i][j]] == m) {
+                cout << arr[i][j] << " ";
+            }
+        }
+    }
+    cout << "hr";
+}
+
+int kthSmallest(vector<int> &arr, int k) {
+    make_heap(arr.begin(), arr.end());
+
+    printVect(arr);
+    int size = arr.size();
+    k = size - k - 1;
+    cout << k << endl;
+    while (k--) {
+        printVect(arr);
+
+        pop_heap(arr.begin(), arr.end());
+    }
+    printVect(arr);
+
+    return arr[0];
+}
 
 int main() {
     int size = 15;
@@ -3504,20 +3801,30 @@ int main() {
     vector<int> sd = {1, 4,  63, 6, 5,  12, 47,  56, 71, 5,  63, 15, 57, 12,
                       1, 63, 5,  0, 67, 5,  178, 8,  6,  94, 5,  47, 69, 8};
 
-    vector<vector<int>> ct = {
-        {1, 1, 9, 1, 7, 5},
-        {2, 4, 8, 0, 6, 4},
-    };
+    vector<vector<int>> ct = {{0, 3, 8, 7, 1, 1},
+                              {0, 8, 3, 7, 8, 0},
+                              {0, 3, 2, 1, 8, 1},
+                              {0, 3, 8, 5, 0, 9}};
 
-    vector<vector<int>> f = {{9, 9, 4}, {6, 6, 8}, {2, 1, 1}};
-    vector<int> vt = {4, 4, 7, 6, 7};
-    vector<int> dt = {9, 2, 17, 24, 14, 15, 10, 6, 13, 25, 29, 28, 18, 27, 4};
+    vector<vector<int>> f = {{1, 1}};
+    vector<int> vt = {1, 1, -3, 2, 3, 4, 5};
+    vector<int> dt = {1, 1, 2,  2,  2,  3,  4,  5,  5,  6,  7, 7,
+                      1, 0, 12, 14, 15, 16, 17, 17, 18, 19, 19};
+
     vector<int> rs;
 
     string s;
     // cin >> s;
 
-    generateMatrix(10);
+    printVect(vt);
+    printCommonElements(ct);
+    // searchMatrix(f, 5);
+    // cout << subArrayExists(vt) << endl;
+    // nextPermutation(vt);
+    // cout << minJumps(vt) << endl;
+    // cout << jump(vt);
+    // cout << canJump(vt);
+    // generateMatrix(10);
     // spiralOrder(ct);
     // printVect(vt);
     // printVect(dt);

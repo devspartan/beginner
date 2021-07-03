@@ -1,59 +1,51 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-void swap(string &s1, int i, int j) {
-    char temp = s1[i];
-    s1[i] = s1[j];
-    s1[j] = temp;
-}
-
 int main() {
-    int tst;
-
-    cin >> tst;
-    while(tst--) {
-        string s1, s2;
-        int len;
-        cin >> len;
-        cin >> s1;
-        cin >> s2;
-        
-        int i = 0;
-        int j = s1.length() - 1;
-        bool check = true;
-        while(i <= j) {
-
-
-            if( s1[j] == s2[j]) {
-                j--;
-                continue;
+    long long int t;
+    cin >> t;
+    while (t--) {
+        long long int n;
+        cin >> n;
+        string s;
+        cin >> s;
+        long long int ttl = 0, sm = 0;
+        for (long long int i = 0; i < n; i++) {
+            if (s[i] == '1') {
+                sm++;
+            } else {
+                ttl++;
             }
-            else if(s1[i] == s2[i]) {
-                i++;
-                continue;
-            }
-            else if( i == j) {
-                check = false;
-                break;
-            }
-            else if(s1[j] == '1' || s1[i] == '0') {
-                check = false;
-                break;
-            }
-            else if(s1[j] == '0' && s1[i] == '1') {
-                swap(s1, i, j);
-                i++;
-                j--;
-            }
-            
         }
-
-        if(check) {
-            cout << "Yes" << endl;
+        vector<long long int> factors;
+        for (long long int i = 1; i <= sqrt(n); i++) {
+            if (n % i == 0) {
+                if (n / i == i) {
+                    factors.push_back(i);
+                } else {
+                    factors.push_back(n / i);
+                    factors.push_back(i);
+                }
+            }
         }
-        else {
-            cout << "No" << endl;
+        long long int ans = 1e9;
+        for (auto it : factors) {
+            vector<long long int> freq(it);
+            for (long long int i = 0; i < it; i++) {
+                for (long long int j = i; j < n; j += it) {
+                    if (s[j] == '1') {
+                        freq[i]++;
+                    }
+                }
+            }
+            long long int req = n / it;
+            for (long long int i = 0; i < it; i++) {
+                long long int to_convert = req - freq[i];
+                to_convert += (sm - freq[i]);
+                ans = min(ans, to_convert);
+            }
         }
+        cout << ans << endl;
     }
 }

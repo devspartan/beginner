@@ -539,6 +539,37 @@ Node *mergeTwoLists(Node *l1, Node *l2) {
     return tt;
 }
 
+Node *mergeKLists(vector<Node *> &lists) {
+    Node *resHead = new Node;
+    Node *temp = resHead;
+
+    int size = lists.size();
+
+    while (true) {
+        Node *tt = new Node;
+        int mt = INT32_MAX;
+        int minIdx = -1;
+        bool check = true;
+        for (int i = 0; i < size; i++) {
+            if (lists[i] != NULL && mt > lists[i]->data) {
+                mt = lists[i]->data;
+                minIdx = i;
+                check = false;
+            }
+        }
+
+        if (check) {
+            break;
+        }
+        tt->data = mt;
+        temp->next = tt;
+        temp = temp->next;
+        lists[minIdx] = lists[minIdx]->next;
+    }
+
+    return resHead;
+}
+
 bool isPalindrome(Node *head) {
     Node *temp = head;
     int lenn = 0;
@@ -640,6 +671,7 @@ Node *reorderListUtil(Node *t1, Node *t2) {
     t2->next = temp;
     return temp;
 }
+
 void LinkList::reorderList(Node *head) {
     Node *temp = head;
     Node *tt = reorderListUtil(temp, temp);
