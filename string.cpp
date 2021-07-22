@@ -2,6 +2,13 @@
 
 using namespace std;
 
+void printVect(vector<int> vt) {
+    for (int i = 0; i < vt.size(); i++) {
+        cout << vt[i] << " ";
+    }
+    cout << endl;
+}
+
 string longestPalindrome(string str) {
     int size = str.length();
 
@@ -27,8 +34,10 @@ string longestPalindrome(string str) {
     for (int i = 0; i < size - 1; i++) {
         if (str[i] == str[i + 1]) {
             dp[i][i + 1] = 1;
-            stIdx = i;
-            maxlen = 2;
+            if (2 > maxlen) {
+                stIdx = i;
+                maxlen = 2;
+            }
         }
     }
 
@@ -50,27 +59,28 @@ string longestPalindrome(string str) {
         }
     }
 
-    bool st[size];
-    for (int i = 0; i < size; i++) {
-        st[i] = false;
-    }
-    int len = size - 1;
-    int countNonOverlappingSub = 0;
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j <= i; j++) {
-            if (dp[j][j + len] == 1 && !st[j]) {
-                countNonOverlappingSub++;
-                cout << "len: " << len + 1 << "  st: " << j
-                     << " ed: " << j + len << "  " << dp[j][j + len] << endl;
-                for (int k = j; k <= j + len; k++) {
-                    st[k] = true;
-                }
-            }
-        }
-        len--;
-    }
+    cout << stIdx << " " << maxlen << endl;
+    // bool st[size];
+    // for (int i = 0; i < size; i++) {
+    //     st[i] = false;
+    // }
+    // int len = size - 1;
+    // int countNonOverlappingSub = 0;
+    // for (int i = 0; i < size; i++) {
+    //     for (int j = 0; j <= i; j++) {
+    //         if (dp[j][j + len] == 1 && !st[j]) {
+    //             countNonOverlappingSub++;
+    //             cout << "len: " << len + 1 << "  st: " << j
+    //                  << " ed: " << j + len << "  " << dp[j][j + len] << endl;
+    //             for (int k = j; k <= j + len; k++) {
+    //                 st[k] = true;
+    //             }
+    //         }
+    //     }
+    //     len--;
+    // }
 
-    cout << countNonOverlappingSub << endl;
+    // cout << countNonOverlappingSub << endl;
 
     // for (int i = 0; i < size; i++) {
     //     for (int j = 0; j < size; j++) {
@@ -1264,20 +1274,324 @@ int numberOfRounds(string startTime, string finishTime) {
     }
 }
 
+void printStringRec(vector<vector<string>> &str, int i, vector<string> &res) {
+
+    if (i >= str.size()) {
+        return;
+    }
+
+    for (int j = 0; j < str[i].size(); j++) {
+        res.push_back(str[i][j]);
+        printStringRec(str, i + 1, res);
+        if (i == str.size() - 1) {
+            for (int k = 0; k < res.size(); k++) {
+                cout << res[k] << " ";
+            }
+            cout << endl;
+        }
+        res.pop_back();
+    }
+}
+
+void printSubsequence(string str, string res) {
+    if (str.length() == 0) {
+        cout << res << endl;
+        return;
+    }
+
+    printSubsequence(str.substr(1), res);
+    printSubsequence(str.substr(1), res + str[0]);
+
+    return;
+}
+
+void printSubsequenceNonRepeat(string str, string res, set<string> &st) {
+    if (str.length() == 0) {
+        st.insert(res);
+        return;
+    }
+
+    printSubsequenceNonRepeat(str.substr(1), res, st);
+    printSubsequenceNonRepeat(str.substr(1), res + str[0], st);
+    return;
+}
+
+int editDistance(string s, string t, int i, int j) {
+    if (i < 0 || j < 0) {
+        return 0;
+    }
+}
+
+bool areIsomorphic(string str1, string str2) {
+    if (str1.length() != str2.length()) {
+        return 0;
+    }
+    int from[150];
+    int to[150];
+    for (int i = 0; i < 150; i++) {
+        from[i] = -1;
+        to[i] = -1;
+    }
+    for (int i = 0; i < str1.length(); i++) {
+        if (from[str1[i]] != -1 && str2[i] != from[str1[i]]) {
+            return false;
+        }
+        if (to[str2[i]] != -1 && str1[i] != to[str2[i]]) {
+            return false;
+        }
+        from[str1[i]] = str2[i];
+        to[str2[i]] = str1[i];
+    }
+
+    return true;
+}
+
+int minOps(string &A, string &B) {
+    int m = A.length(), n = B.length();
+
+    if (n != m)
+        return -1;
+    int count[256];
+    memset(count, 0, sizeof(count));
+    for (int i = 0; i < n; i++)
+        count[B[i]]++;
+    for (int i = 0; i < n; i++)
+        count[A[i]]--;
+    for (int i = 0; i < 256; i++)
+        if (count[i])
+            return -1;
+
+    int res = 0;
+    for (int i = n - 1, j = n - 1; i >= 0;) {
+        while (i >= 0 && A[i] != B[j]) {
+            i--;
+            res++;
+        }
+
+        if (i >= 0) {
+            i--;
+            j--;
+        }
+    }
+    return res;
+}
+
+vector<vector<string>> Anagrams(vector<string> &vt) {
+
+    int size = vt.size();
+
+    unordered_map<string, vector<string>> mp;
+
+    for (int i = 0; i < size; i++) {
+        string s = vt[i];
+        sort(s.begin(), s.end());
+        mp[s].push_back(vt[i]);
+    }
+
+    vector<vector<string>> res;
+
+    for (auto it : mp) {
+        res.push_back(it.second);
+    }
+
+    return res;
+}
+
+vector<int> prefixSuffix(string pt) {
+    cout << pt << endl;
+    int lp = pt.length();
+
+    vector<int> pref(lp, 0);
+
+    int i = 1, j = 0;
+    bool check = false;
+
+    while (j < i && i < lp) {
+        if (pt[i] == pt[j]) {
+            pref[i] = j + 1;
+            i++;
+            j++;
+        } else {
+            if (j != 0) {
+                j = pref[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+
+    return pref;
+}
+
+string KMPAlgo(string str, string pt) {
+
+    int ls = str.length();
+    int lp = pt.length();
+
+    if (ls < lp) {
+        return "";
+    }
+    if (lp == 1) {
+        for (int i = 0; i < ls; i++) {
+            if (pt[0] == str[i]) {
+                return pt;
+            }
+        }
+        return "";
+    }
+
+    vector<int> pref = prefixSuffix(pt);
+
+    printVect(pref);
+
+    int j = 0, i = 0;
+    while (i < ls) {
+        if (pt[j] == str[i]) {
+            j++;
+            i++;
+        }
+
+        if (j == lp) {
+            printf("Found pattern at index %d \n", i - j);
+            j = pref[j - 1];
+        }
+
+        else if (i < ls && pt[j] != str[i]) {
+            if (j != 0)
+                j = pref[j - 1];
+            else
+                i = i + 1;
+        }
+    }
+
+    return "";
+}
+
+string smallestWindow(string s, string p) {
+    unordered_map<char, int> ump;
+
+    int l1 = p.length();
+    int l2 = s.length();
+    int uniq = 0;
+    for (int i = 0; i < l1; i++) {
+        if (ump[p[i]] == 0) {
+            uniq++;
+        }
+        ump[p[i]]++;
+    }
+
+    cout << s << endl;
+    cout << p << endl;
+
+    for (auto it : ump) {
+        cout << it.first << " ===> " << it.second << endl;
+    }
+
+    cout << uniq << "\n";
+
+    int resi = -1;
+    int resj = -1;
+    unordered_map<char, int> hp;
+    int i = 0, j = 0;
+    while (uniq && i < l2) {
+        if (ump[s[i]] != 0) {
+            if (hp[s[i]] == 0) {
+                uniq--;
+            }
+            hp[s[i]]++;
+        }
+        i++;
+    }
+
+    for (auto it : hp) {
+        cout << it.first << " ==> " << it.second << endl;
+    }
+
+    int mint = i - j;
+    while (i <= l2) {
+        cout << j << " " << s[j] << "--------" << i << " " << s[i] << "   "
+             << mint << endl;
+        while (j < i) {
+            if (ump[s[j]] != 0) {
+                cout << s[j] << "  " << hp[s[j]] << endl;
+                if (hp[s[j]] == ump[s[j]]) {
+                    int l = i - j;
+                    if (l < mint) {
+                        mint = l;
+                        resi = i;
+                        resj = j;
+                    }
+                    break;
+                } else if (hp[s[j]] > ump[s[j]]) {
+                    hp[s[j]]--;
+                    j++;
+                    int l = i - j;
+                    if (l < mint) {
+                        mint = l;
+                        resi = i;
+                        resj = j;
+                    }
+                }
+            } else {
+                j++;
+            }
+        }
+
+        while (i < l2) {
+            if (ump[s[i]] != 0) {
+                hp[s[i]]++;
+                i++;
+                break;
+            } else {
+                i++;
+            }
+        }
+    }
+
+    for (auto it : hp) {
+        cout << it.first << " ==> " << it.second << endl;
+    }
+
+    cout << resi << "  " << resj << " " << endl;
+    return "res";
+}
+
+bool areRotations(string str1, string str2) {
+    string temp = "aaarcbd";
+
+    cout << temp.find(str1) << "  " << string::npos << endl;
+
+    return false;
+}
+
 int main() {
 
     vector<string> vt = {"abcw", "baz", "foo", "bar", "xtfn", "abcdef"};
-    string str = "01110";
+    vector<vector<string>> st = {
+        {"foo", "bar", "baz"}, {"he", "she"}, {"i", "am", "ullu", "yeah"}};
+
+    string str = "poohrmtaxrykrzqxfctchjpxcqwn";
     string parenthesis = "()(((()())(";
-    string s = "00:01";
-    string v = "00:00";
+    string s = "ecfbefdcfca";
+    string v = "bcfbefdcfc";
     string t;
 
     // cin >> s;
     // cin >> v;
     // cin >> t;
+    cout << s << endl;
+    cout << v << endl;
+    vector<string> res;
 
-    cout << numberOfRounds(s, v);
+    // smallestWindow(s, v);
+
+    // set<string> resSt;
+    // printSubsequenceNonRepeat(s, "", resSt);
+    // areRotations(s, v);
+    // KMPAlgo(s, v);
+    // cout << areIsomorphic(s, v) << endl;
+    // printStringRec(st, 0, res);
+    // cout << numberOfRounds(s, v);
     // cout << maximum_count(56, 6, "245769") << endl;
     // cout << simplifyPath(s) << endl;
     // cout << isValid(s) << endl;
@@ -1316,8 +1630,8 @@ int main() {
     // }; string ruleKey = "type"; string ruleValue = "phone"; cout <<
     // countMatches(items, ruleKey, ruleValue) << endl;
     // letterCasePermutation(s);
-    // cout << "parenthieses: " << longestValidParenthesisStack(parenthesis) <<
-    // endl; cout << countCharacters(vt, s) << endl;
+    // cout << "parenthieses: " << longestValidParenthesisStack(parenthesis)
+    // << endl; cout << countCharacters(vt, s) << endl;
 
     // shortestToChar(s, 'e');
 }

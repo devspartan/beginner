@@ -3769,26 +3769,336 @@ void printCommonElements(vector<vector<int>> &arr) {
     cout << "hr";
 }
 
-int kthSmallest(vector<int> &arr, int k) {
-    make_heap(arr.begin(), arr.end());
+// int kthSmallest(vector<int> &arr, int k) {}
 
-    printVect(arr);
+void maxHeapify(int i, vector<int> &arr) {
     int size = arr.size();
-    k = size - k - 1;
-    cout << k << endl;
-    while (k--) {
-        printVect(arr);
-
-        pop_heap(arr.begin(), arr.end());
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    int max = i;
+    if (left < size && arr[left] > arr[i]) {
+        max = left;
     }
-    printVect(arr);
+    if (right < size && arr[right] >= arr[max]) {
+        max = right;
+    }
 
-    return arr[0];
+    if (max != i) {
+        swap(arr, max, i);
+        maxHeapify(max, arr);
+    }
+}
+
+void minHeapify(int i, vector<int> &arr, int k, int j) {
+    int size = k;
+    int left = 2 * (i - j) + 1 + j;
+    int right = 2 * (i - j) + 2 + j;
+    int max = i;
+    if (left < size && arr[left] < arr[i]) {
+        max = left;
+    }
+    if (right < size && arr[right] <= arr[max]) {
+        max = right;
+    }
+
+    if (max != i) {
+        swap(arr, max, i);
+        minHeapify(max, arr, k, j);
+    }
+}
+
+void createHeap(vector<int> &arr) {
+    int size = arr.size();
+    int k = 4;
+    for (int j = 0; j <= size - k; j++) {
+        int len = k / 2 - 1 + j;
+        for (int i = len; i >= j; i--) {
+            minHeapify(i, arr, j + k, j);
+        }
+    }
+
+    printVect(arr);
+}
+
+int maxProfit3Util(vector<int> &arr, int i, int b, int state, int trans) {
+    if (trans == 0 || i >= arr.size()) {
+        return 0;
+    }
+
+    int res = INT32_MIN;
+    if (state == 0) {
+        res = max(maxProfit3Util(arr, i + 1, i, 1, trans--),
+                  maxProfit3Util(arr, i + 1, -1, 0, trans));
+    } else if (state == 1) {
+        res = max(arr[i] - arr[b] + maxProfit3Util(arr, i + 1, -1, 0, trans),
+                  maxProfit3Util(arr, i + 1, b, 1, trans));
+    }
+
+    return res;
+}
+
+int maxProfit4(vector<int> &arr) {
+    int size = arr.size();
+    int res = 0;
+    vector<int> vt(size, 0);
+    for (int i = 0; i < size; i++) {
+
+        // cout << "i: " << i << "  " << max1 << " " << max2 << endl;
+    }
+
+    return res;
+}
+
+int maximumAmountUtil(vector<int> &arr, int start, int end, int sumArray[],
+                      int **dp) {
+    int sum = 0;
+    if (start == end) {
+        return arr[start];
+    }
+    // if (dp[start][end] != -1) {
+    //     return dp[start][end];
+    // }
+    if (start == 0) {
+        sum = sumArray[end];
+    } else {
+        sum = sumArray[end] - sumArray[start - 1];
+    }
+    int option1 = sum - maximumAmountUtil(arr, start + 1, end, sumArray, dp);
+    int option2 = sum - maximumAmountUtil(arr, start, end - 1, sumArray, dp);
+    // dp[start][end] = max(option1, option2);
+    return dp[start][end];
+}
+
+long long int count(long long int n) {
+    long long int table[n + 1];
+    memset(table, 0, sizeof(table));
+    table[0] = 1; // If 0 sum is required number of ways is 1.
+
+    int count = 0;
+    for (int i = 0; i <= n / 3; i++) {
+        for (int j = 0; j <= n / 5; j++) {
+            for (int k = 0; k <= n / 10; k++) {
+                int sm = i * 3 + j * 5 + k * 10;
+                if (sm == n) {
+                    cout << i << " " << j << " " << k << endl;
+                    count++;
+                }
+            }
+        }
+    }
+    return count;
+}
+
+int maximumPathUtil(vector<vector<int>> &mt, int i, int j,
+                    vector<vector<int>> &dp) {
+    int n = mt.size();
+    int m = mt[0].size();
+
+    if (i >= n || j < 0 || j >= m) {
+        return 0;
+    }
+
+    if (dp[i][j] != -1) {
+        return dp[i][j];
+    }
+
+    int t1 = maximumPathUtil(mt, i + 1, j - 1, dp) + mt[i][j];
+    int t2 = maximumPathUtil(mt, i + 1, j, dp) + mt[i][j];
+    int t3 = maximumPathUtil(mt, i + 1, j + 1, dp) + mt[i][j];
+
+    int maxt = max(max(t1, t2), t3);
+    dp[i][j] = maxt;
+    return maxt;
+}
+
+int maximumPath(int N, vector<vector<int>> m) {
+
+    vector<vector<int>> dp(N, vector<int>(N, -1));
+    int maxt = 0;
+    for (int i = 0; i < N; i++) {
+        int k = maximumPathUtil(m, 0, i, dp);
+        maxt = max(maxt, k);
+    }
+    return maxt;
+}
+
+int maxSquare(int n, int m, vector<vector<int>> mt) {
+
+    int ans = 0;
+    for (int j = 0; j < m; j++) {
+        if (mt[0][j]) {
+            ans = 1;
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (mt[i][0]) {
+            ans = 1;
+        }
+    }
+    for (int i = 1; i < n; i++) {
+        for (int j = 1; j < m; j++) {
+            int maxt = 0;
+            if (mt[i - 1][j - 1] && mt[i - 1][j] && mt[i][j - 1] && mt[i][j]) {
+                maxt =
+                    min(mt[i - 1][j - 1], min(mt[i - 1][j], mt[i][j - 1])) + 1;
+                mt[i][j] = maxt;
+                ans = max(maxt, ans);
+            }
+        }
+    }
+    return ans;
+}
+
+int maxSumPairWithDifferenceLessThanK(vector<int> arr, int N, int K) {
+    if (N == 1) {
+        return 0;
+    }
+
+    sort(arr.begin(), arr.end());
+    printVect(arr);
+    vector<int> hash(N + 1, 0);
+    int i = N - 1, j = N - 2;
+    while (i > 0 && j >= 0) {
+        j = i - 1;
+        while (arr[i] - arr[j] < K && j >= 0) {
+            cout << arr[i] << " - " << arr[j] << endl;
+            hash[i] = 1;
+            hash[j] = 1;
+            j--;
+            break;
+        }
+        i = j;
+    }
+
+    int res = 0;
+    for (int i = 0; i < N + 1; i++) {
+        if (hash[i] == 1) {
+            res += arr[i];
+        }
+    }
+
+    return res;
+}
+
+vector<int> countBits(int n) {
+    vector<int> res(n + 1, 0);
+
+    for (int i = 1; i <= n; i++) {
+        int temp = i;
+        int count = 0;
+        while (temp > 0) {
+            count += temp % 2 == 1 ? 1 : 0;
+            temp = temp / 2;
+
+            if (res[temp] != 0) {
+                count += res[temp];
+                break;
+            }
+        }
+        res[i] = count;
+    }
+
+    return res;
+}
+
+bool equalPartitionUtil(int vt[], int size, int sm, int i,
+                        vector<vector<int>> &dp) {
+
+    if (sm == 0) {
+        dp[i][sm] = 1;
+        return true;
+    }
+    if (i >= size || sm < 0) {
+        return false;
+    }
+
+    if (dp[i][sm] != -1) {
+        return dp[i][sm];
+    }
+
+    bool c1 = equalPartitionUtil(vt, size, sm - vt[i], i + 1, dp);
+    bool c2 = equalPartitionUtil(vt, size, sm, i + 1, dp);
+    dp[i][sm] = c1 || c2 ? 1 : 0;
+    return c1 || c2;
+}
+
+int equalPartition(int N, int arr[]) {
+    int sm = 0;
+    for (int i = 0; i < N; i++) {
+        sm += arr[i];
+    }
+
+    if (sm % 2 == 1) {
+        return false;
+    }
+
+    sm /= 2;
+    vector<vector<int>> dp(N + 1, vector<int>(sm + 1, -1));
+    bool he = equalPartitionUtil(arr, N, sm, 0, dp);
+    return he;
+}
+
+int maximumSumRectangle(int R, int C, vector<vector<int>> M) {
+    vector<int> dp(R, 0);
+
+    int mx = 0;
+    for (int i = 0; i < C; i++) {
+        for (int j = i; j < C; j++) {
+            for (int k = 0; k < R; k++) {
+                dp[k] += M[k][j];
+            }
+            mx = max(mx, maxSumSubarray(dp));
+        }
+
+        for (int j = 0; j < R; j++) {
+            dp[j] = 0;
+        }
+    }
+
+    return mx;
+}
+
+long long getCount(int N) {
+
+    int last[10];
+    int next[10];
+    long int dp[N + 1];
+
+    dp[0] = 0;
+    dp[1] = 10;
+
+    for (int j = 0; j < 10; j++) {
+        last[j] = 1;
+        next[j] = 1;
+    }
+
+    for (int i = 0; i < N; i++) {
+        dp[i] = 0;
+
+        next[0] = last[0] + last[8];
+        next[1] = last[1] + last[2] + last[4];
+        next[2] = last[2] + last[1] + last[3] + last[5];
+        next[3] = last[3] + last[2] + last[6];
+        next[4] = last[4] + last[1] + last[5] + last[7];
+        next[5] = last[5] + last[2] + last[4] + last[6] + last[8];
+        next[6] = last[6] + last[3] + last[5] + last[9];
+        next[7] = last[7] + last[4] + last[8];
+        next[8] = last[8] + last[5] + last[7] + last[9] + last[0];
+        next[9] = last[9] + last[8] + last[6];
+
+        for (int j = 0; j < 10; j++) {
+            dp[i] += last[j];
+            last[j] = next[j];
+        }
+    }
+
+    return dp[N - 1];
 }
 
 int main() {
     int size = 15;
-    int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
+    // int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
     int size2 = 2;
     int arr2[size2] = {3, 4};
 
@@ -3801,13 +4111,13 @@ int main() {
     vector<int> sd = {1, 4,  63, 6, 5,  12, 47,  56, 71, 5,  63, 15, 57, 12,
                       1, 63, 5,  0, 67, 5,  178, 8,  6,  94, 5,  47, 69, 8};
 
-    vector<vector<int>> ct = {{0, 3, 8, 7, 1, 1},
-                              {0, 8, 3, 7, 8, 0},
-                              {0, 3, 2, 1, 8, 1},
-                              {0, 3, 8, 5, 0, 9}};
+    vector<vector<int>> ct = {{0, 3, -8, 7, 1, -1},
+                              {0, 8, -3, 7, 8, 0},
+                              {0, 3, 2, 1, -8, 1},
+                              {0, -3, -8, 5, 0, 9}};
 
     vector<vector<int>> f = {{1, 1}};
-    vector<int> vt = {1, 1, -3, 2, 3, 4, 5};
+    vector<int> vt = {0, 1, 2, 3, 4, 5, 6, 7};
     vector<int> dt = {1, 1, 2,  2,  2,  3,  4,  5,  5,  6,  7, 7,
                       1, 0, 12, 14, 15, 16, 17, 17, 18, 19, 19};
 
@@ -3817,7 +4127,17 @@ int main() {
     // cin >> s;
 
     printVect(vt);
-    printCommonElements(ct);
+
+    cout << getCount(5) << endl;
+    // cout << maximumSumRectangle(4, 6, ct);
+    // cout << equalPartition(7, arr);
+    // maximumAmount(vt);
+    // countBits(10);
+    // cout << maximumPath(6, ct);
+    // cout << count(8) << endl;
+    // maxProfit4(vt);
+    // createHeap(vt);
+    // printCommonElements(ct);
     // searchMatrix(f, 5);
     // cout << subArrayExists(vt) << endl;
     // nextPermutation(vt);
