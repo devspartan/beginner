@@ -1049,30 +1049,56 @@ vector<vector<int>> zigzagLevelOrder(Node *root) {
     return res;
 }
 
-vector<int> preorderTraversalStack(Node *root) {}
+bool pruneTreeHelper(Node *root) {
+    if (root == NULL) {
+        return false;
+    }
+
+    bool lt = pruneTreeHelper(root->left);
+    bool rt = pruneTreeHelper(root->right);
+
+    root->left = lt ? root->left : NULL;
+    root->right = rt ? root->right : NULL;
+
+    if (lt || rt) {
+        return true;
+    }
+
+    return root->data == 1;
+}
+
+Node *pruneTree(Node *root) {
+    if (root == NULL) {
+        return NULL;
+    }
+
+    pruneTreeHelper(root);
+    return root;
+}
 
 int main() {
     BST bt1;
     BST bt2;
     int size = 16;
     int size2 = 9;
-    vector<int> arr = {2, 3, 1, 3, 2, 2, 4, 5, 6, 7, 8, 9, 12, 13, 14, 15, 16};
+    vector<int> arr = {1, 0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0};
     int arr2[size2] = {4, 2, 7, 5, 6, 1, 3, 2, 4};
     Node *temp = NULL;
 
     bt1.levelTree(arr, arr.size());
     bt1.levelOrderTraversal();
-    bt1.reverseLvelOrderTraversal();
+    pruneTree(bt1.root);
+    cout << endl;
+    bt1.levelOrderTraversal();
+    // bt1.reverseLvelOrderTraversal();
     // bt1.inorderWithoutRec();
     // levelOrder(bt1.root);
-    // Node *tt = bt1.sortedArrayToBST(arr, 0, arr.size() - 1);
-
+    Node *tt = bt1.sortedArrayToBST(arr, 0, arr.size() - 1);
     vector<int> v1 = {5, 8, 7, 6, 15, 2, 4, 12, 5, 4};
     vector<int> v2;
     vector<int> v3;
 
-    cout << ">>>>>----------->>>>>>" << endl;
-    zigzagLevelOrder(bt1.root);
+    // zigzagLevelOrder(bt1.root);
     // inorderTraversalStack(bt1.root);
     // bt1.pseudoPalindromicPaths();
     // cout << bt1.isSymmetric(bt1.root) << endl;

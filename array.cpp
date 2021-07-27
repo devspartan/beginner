@@ -1546,12 +1546,10 @@ int triangleNumber(vector<int> &arr) {
         }
         for (int j = i + 1; j < size - 1 && arr[i] != 0; j++) {
             for (int k = j + 1; k < size; k++) {
-                // cout << arr[i] << " " << arr[j] << " " << arr[k] << endl;
-                if (arr[i] + arr[j] <= arr[k]) {
-                    break;
-                } else {
+                if (arr[i] + arr[j] > arr[k]) {
                     count++;
-                    // cout << "in count\n";
+                } else {
+                    break;
                 }
             }
         }
@@ -4096,6 +4094,158 @@ long long getCount(int N) {
     return dp[N - 1];
 }
 
+int partitionDisjoint(vector<int> &nums) {
+    int size = nums.size();
+    int mx = nums[0];
+    int minIdx = 1;
+    int mn = INT32_MAX;
+    for (int i = 1; i < size; i++) {
+        mx = max(mx, nums[i - 1]);
+        if (i >= minIdx) {
+            mn = INT32_MAX;
+            for (int j = i; j < size; j++) {
+                if (mn > nums[j]) {
+                    mn = nums[j];
+                    minIdx = j;
+                }
+            }
+        }
+        if (mx <= mn) {
+            return i;
+        }
+    }
+
+    return size;
+}
+
+vector<vector<int>> fourSum2(vector<int> &arr, int target) {
+
+    int size = arr.size();
+    vector<vector<int>> res;
+
+    if (size < 3) {
+        return res;
+    }
+
+    sort(arr.begin(), arr.end());
+
+    set<vector<int>> st;
+    int count = 0;
+
+    for (int i = 0; i < size - 3; i++) {
+        for (int j = i + 1; j < size - 2; j++) {
+            int req = target - arr[i] - arr[j];
+            int k = j + 1, l = size - 1;
+
+            while (k < l) {
+                int sm = arr[k] + arr[l];
+                if (sm == req) {
+                    vector<int> t;
+                    t.push_back(arr[i]);
+                    t.push_back(arr[j]);
+                    t.push_back(arr[k]);
+                    t.push_back(arr[l]);
+                    // st.insert(t);
+                    res.push_back(t);
+                    k++;
+                    l--;
+                } else if (sm < req) {
+                    k++;
+                } else {
+                    l--;
+                }
+            }
+        }
+    }
+
+    // for (auto it : st) {
+    //     res.push_back(it);
+    // }
+
+    print2dVect(res);
+    return res;
+}
+
+bool compareRange(pair<int, int> a, pair<int, int> b) {
+    return a.first < b.first;
+}
+
+int minTaps(vector<int> &arr) {
+    vector<pair<int, int>> vt;
+    int size = arr.size();
+
+    for (int i = 0; i < arr.size(); i++) {
+        pair<int, int> pr;
+        pr.first = max(i - arr[i], 0);
+        pr.second = min(i + arr[i], size - 1);
+        vt.push_back(pr);
+    }
+
+    sort(vt.begin(), vt.end(), compareRange);
+    cout << endl;
+    for (auto it : vt) {
+        cout << it.first << " " << it.second << endl;
+    }
+    cout << '--' << endl;
+    for (auto it : vt) {
+        cout << it.first << " " << it.second << endl;
+    }
+    cout << " ------------ " << endl;
+
+    int low = vt[0].first, high = vt[0].second;
+    int count = 1;
+    for (int i = 0; i < vt.size(); i++) {
+        pair<int, int> it = vt[i];
+
+        if (it.second > high && it.first <= low) {
+            high = it.second;
+            low = min(it.first, low);
+        }
+
+        if (it.first > low && it.first <= high && it.second > high) {
+            int j = i;
+            while (vt[j].first < high) {
+                j++;
+            }
+            count++;
+            i = j - 1;
+            low = vt[i].first;
+            high = vt[i].second;
+        }
+
+        cout << i << " -> " << low << " " << high << endl;
+    }
+
+    return count;
+}
+
+int findIntegers(int n) {
+
+    int count = 0;
+    for (int i = 0; i <= n; i++) {
+        int temp = i;
+        int check = 0;
+
+        while (temp != 0) {
+            if (temp % 2 == 1) {
+                check++;
+            } else {
+                check = 0;
+            }
+
+            temp = temp / 2;
+
+            if (check == 2) {
+                cout << i << endl;
+                count++;
+                break;
+            }
+        }
+    }
+
+    return n - count + 1;
+}
+
 int main() {
     int size = 15;
     // int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -4117,7 +4267,7 @@ int main() {
                               {0, -3, -8, 5, 0, 9}};
 
     vector<vector<int>> f = {{1, 1}};
-    vector<int> vt = {0, 1, 2, 3, 4, 5, 6, 7};
+    vector<int> vt = {1, 2, 1, 0, 2, 1, 0, 1};
     vector<int> dt = {1, 1, 2,  2,  2,  3,  4,  5,  5,  6,  7, 7,
                       1, 0, 12, 14, 15, 16, 17, 17, 18, 19, 19};
 
@@ -4128,7 +4278,11 @@ int main() {
 
     printVect(vt);
 
-    cout << getCount(5) << endl;
+    cout << findIntegers(5);
+    // cout << minTaps(vt);
+    // fourSum2(vt, 8);
+    // cout << partitionDisjoint(vt) << endl;
+    // cout << getCount(5) << endl;
     // cout << maximumSumRectangle(4, 6, ct);
     // cout << equalPartition(7, arr);
     // maximumAmount(vt);
