@@ -1,0 +1,1 @@
+{"name":"Local: SWAP10HG","url":"/home/devendra/gfg/SWAP10HG.cpp","tests":[{"id":1627739678396,"input":"1\n5 3 5\n5 1 5 1 1","output":"4"},{"id":1627742286065,"input":"1","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/home/devendra/gfg/SWAP10HG.cpp","group":"local","local":true}

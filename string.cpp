@@ -1320,6 +1320,8 @@ int editDistance(string s, string t, int i, int j) {
     if (i < 0 || j < 0) {
         return 0;
     }
+
+    return -1;
 }
 
 bool areIsomorphic(string str1, string str2) {
@@ -1558,10 +1560,60 @@ string smallestWindow(string s, string p) {
 
 bool areRotations(string str1, string str2) {
     string temp = "aaarcbd";
-
     cout << temp.find(str1) << "  " << string::npos << endl;
-
     return false;
+}
+
+int minCutUtil(string s, int i, vector<vector<int>> &res, vector<int> &memo) {
+    int len = s.length();
+    if (i >= len) {
+        return 0;
+    }
+    if (memo[i] != -1) {
+        return memo[i];
+    }
+
+    int t = INT32_MAX;
+    for (int j = i; j < len; j++) {
+        int check = res[i][j];
+        if (check != 0) {
+            t = min(t, minCutUtil(s, j + 1, res, memo));
+        }
+    }
+
+    memo[i] = t + 1;
+    return t + 1;
+}
+
+int minCut(string s) {
+    int len = s.length();
+    vector<int> memo(len + 1, -1);
+    vector<vector<int>> res(len);
+    for (int i = 0; i < len; i++) {
+        vector<int> temp(len, 0);
+        res[i] = temp;
+    }
+
+    for (int i = 0; i < len; i++) {
+        res[i][i] = 1;
+        if (i > 0 && s[i] == s[i - 1]) {
+            res[i - 1][i] = 1;
+        }
+    }
+
+    for (int k = 2; k < len; k++) {
+        for (int j = 0; j < len - k; j++) {
+            int i = j + k;
+            if (s[j] == s[i]) {
+                res[j][i] = res[j + 1][i - 1];
+            } else {
+                res[j][i] = 0;
+            }
+        }
+    }
+
+    int rt = minCutUtil(s, 0, res, memo);
+    return rt - 1;
 }
 
 int main() {
@@ -1572,7 +1624,7 @@ int main() {
 
     string str = "poohrmtaxrykrzqxfctchjpxcqwn";
     string parenthesis = "()(((()())(";
-    string s = "ecfbefdcfca";
+    string s = "bbcbb";
     string v = "bcfbefdcfc";
     string t;
 
@@ -1580,11 +1632,10 @@ int main() {
     // cin >> v;
     // cin >> t;
     cout << s << endl;
-    cout << v << endl;
+    // cout << v << endl;
     vector<string> res;
 
-    // smallestWindow(s, v);
-
+    minCut(s);
     // set<string> resSt;
     // printSubsequenceNonRepeat(s, "", resSt);
     // areRotations(s, v);

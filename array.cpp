@@ -4186,7 +4186,7 @@ int minTaps(vector<int> &arr) {
     for (auto it : vt) {
         cout << it.first << " " << it.second << endl;
     }
-    cout << '--' << endl;
+
     for (auto it : vt) {
         cout << it.first << " " << it.second << endl;
     }
@@ -4219,6 +4219,27 @@ int minTaps(vector<int> &arr) {
     return count;
 }
 
+bool winnerSquareGameUtil(int n) {
+    bool check = isPerfectSquare(n);
+
+    if (n <= 0) {
+        cout << n << " gotcha" << endl;
+        return false;
+    }
+
+    for (int i = 1; i * i < n; i++) {
+        bool res = winnerSquareGameUtil(n - i * i);
+
+        if (res) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool winnerSquareGame(int n) { return winnerSquareGameUtil(n); }
+
 int findIntegers(int n) {
 
     int count = 0;
@@ -4246,6 +4267,155 @@ int findIntegers(int n) {
     return n - count + 1;
 }
 
+bool stoneGame(vector<int> &piles) {
+    int size = piles.size();
+
+    vector<vector<vector<int>>> dp(
+        size, vector<vector<int>>(size, vector<int>(2, 0)));
+
+    for (int i = 0; i < size; i++) {
+        dp[i][i][0] = piles[i];
+        dp[i][i][1] = 0;
+        if (i > 0) {
+            dp[i - 1][i][0] = max(piles[i], piles[i - 1]);
+            dp[i - 1][i][1] = min(piles[i], piles[i - 1]);
+        }
+    }
+    for (int k = 2; k < size; k++) {
+        for (int i = 0; i < size - k; i++) {
+            int j = i + k;
+            int c1 = piles[i] + dp[i + 1][j][1];
+            int c2 = piles[j] + dp[i][j - 1][1];
+            if (c1 > c2) {
+                dp[i][j][0] = c1;
+                dp[i][j][1] = dp[i + 1][j][0];
+            } else {
+                dp[i][j][0] = c2;
+                dp[i][j][1] = dp[i][j - 1][0];
+            }
+        }
+    }
+
+    // for (auto it : dp) {
+    //     for (auto i : it) {
+    //         cout << "(" << i[0] << ", " << i[1] << ")" << "  ";
+    //     }
+    //     cout << endl;
+    // }
+
+    return dp[0][size - 1][0] > dp[0][size][1];
+}
+
+vector<vector<int>> matrixRankTransform(vector<vector<int>> &matrix) {
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    print2dVect(matrix);
+    cout << " ------------ " << endl;
+    vector<vector<int>> res(m, vector<int>(n, 0));
+    vector<vector<int>> arr;
+    vector<vector<int>> row(m, vector<int>(2, 0));
+    vector<vector<int>> col(n, vector<int>(2, 0));
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            arr.push_back({matrix[i][j], i, j});
+        }
+    }
+
+    sort(arr.begin(), arr.end(), [](auto &a, auto &b) { return a[0] < b[0]; });
+    print2dVect(arr);
+    cout << " ----- " << endl;
+    cout << row.size() << " " << col.size() << endl;
+
+    for (int i = 0; i < m * n; i++) {
+        int el = arr[i][0];
+        int r = arr[i][1];
+        int c = arr[i][2];
+
+        cout << "r: " << r << " c: " << c << "  val -> " << el << endl;
+        cout << row[r][0] << " " << row[r][1] << " ------ " << col[c][0] << " "
+             << col[c][1] << endl;
+        if (max(row[r][0], col[c][0]) == 0) {
+            row[r][0] = 1;
+            row[r][1] = el;
+            col[c][0] = 1;
+            col[c][1] = el;
+            res[r][c] = 1;
+        } else if (row[r][0] > col[c][0]) {
+            if (row[r][1] == el) {
+                res[r][c] = row[r][0];
+                col[c][0] = row[r][0];
+                col[c][1] = el;
+            } else {
+                row[r][0]++;
+                row[r][1] = el;
+                col[c][0] = row[r][0];
+                col[c][1] = el;
+                res[r][c] = row[r][0];
+            }
+        } else {
+            if (col[c][1] == el) {
+                res[r][c] = col[c][0];
+                row[r][0] = col[c][0];
+                row[r][1] = col[c][1];
+            } else {
+                col[c][0]++;
+                col[c][1] = el;
+                row[r][0] = col[c][0];
+                row[r][1] = el;
+                res[r][c] = col[c][0];
+            }
+        }
+
+        cout << "Row: ";
+        for (auto it : row) {
+            cout << "(" << it[0] << "," << it[1] << ") ";
+        }
+        cout << endl << "Col: ";
+        for (auto it : col) {
+            cout << "(" << it[0] << "," << it[1] << ") ";
+        }
+        cout << endl;
+        print2dVect(res);
+    }
+
+    print2dVect(res);
+
+    return res;
+}
+
+void findSumLength(vector<vector<int>> arr) {
+
+    map<int, int> freq;
+    for (auto i : arr)
+        freq[i[0]] = i[1];
+
+    map<int, int> freq_2;
+
+      for (auto i : freq) {
+        if (freq[i.first] >= 2)
+            freq_2[i.first] = freq[i.first];
+    }
+
+    vector<int> arr1;
+    for (auto i : freq_2)
+        arr1.push_back((i.first) * (freq_2[(i.first)] / 2) * 2);
+    sort(arr1.begin(), arr1.end());
+
+    reverse(arr1.begin(), arr1.end());
+    int summ = 0;
+    if (arr1.size() % 2 == 0) {
+        for (int i : arr1)
+            summ += i;
+    } else {
+        for (int i = 0; i < arr1.size() - 1; i++) {
+            summ += arr1[i];
+        }
+    }
+    cout << summ;
+}
+
 int main() {
     int size = 15;
     // int arr[size] = {7, 6, 13, 8, 6, 3, 1, 2, 9, 7, 8, 5, 3, 3, 1};
@@ -4261,24 +4431,25 @@ int main() {
     vector<int> sd = {1, 4,  63, 6, 5,  12, 47,  56, 71, 5,  63, 15, 57, 12,
                       1, 63, 5,  0, 67, 5,  178, 8,  6,  94, 5,  47, 69, 8};
 
-    vector<vector<int>> ct = {{0, 3, -8, 7, 1, -1},
-                              {0, 8, -3, 7, 8, 0},
-                              {0, 3, 2, 1, -8, 1},
-                              {0, -3, -8, 5, 0, 9}};
+    vector<vector<int>> ct = {{5, 6}, {3, 2}, {4, 3}, {6, 1}};
 
     vector<vector<int>> f = {{1, 1}};
-    vector<int> vt = {1, 2, 1, 0, 2, 1, 0, 1};
     vector<int> dt = {1, 1, 2,  2,  2,  3,  4,  5,  5,  6,  7, 7,
                       1, 0, 12, 14, 15, 16, 17, 17, 18, 19, 19};
 
+    vector<int> vt = {5, 3, 4, 5};
+    vector<int> d = {5, 9, 11, 11, 14, 17};
+    vector<int> t = {1, 2, 3, 2, 2, 1};
     vector<int> rs;
 
-    string s;
-    // cin >> s;
+    // printVect(vt);
 
-    printVect(vt);
-
-    cout << findIntegers(5);
+    findSumLength(ct);
+    // matrixRankTransform(ct);
+    // stoneGame(vt);
+    // cout << findPairs(vt, 0);
+    // cout << findCount(15) << endl;
+    // cout << winnerSquareGame(1) << endl;
     // cout << minTaps(vt);
     // fourSum2(vt, 8);
     // cout << partitionDisjoint(vt) << endl;

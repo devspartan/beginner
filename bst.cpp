@@ -728,7 +728,6 @@ void rightSideView(Node *root, int level) {
 }
 
 vector<double> BST::averageOfLevels(Node *root) {
-    // [2147483647,2147483647,2147483647]
     vector<double> res;
     Node *tt = root;
 
@@ -1075,6 +1074,37 @@ Node *pruneTree(Node *root) {
     pruneTreeHelper(root);
     return root;
 }
+
+void pathSumUtil(Node *root, int targetSum, vector<int> t,
+                 vector<vector<int>> &res) {
+    if (root == NULL || targetSum <= 0) {
+        if (t[0] == 0) {
+            res.push_back(t);
+        }
+        return;
+    }
+
+    t[0] = targetSum - root->data;
+    pathSumUtil(root->left, targetSum - root->data, t, res);
+    pathSumUtil(root->right, targetSum - root->data, t, res);
+    return;
+}
+
+vector<vector<int>> pathSum(Node *root, int targetSum) {
+    vector<vector<int>> res;
+    vector<int> r;
+    r.push_back(targetSum);
+    pathSumUtil(root, targetSum, r, res);
+    for (auto it : res) {
+        for (auto i : it) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+    return res;
+}
+
+vector<vector<int>> levelOrderBottom(Node *root) {}
 
 int main() {
     BST bt1;
