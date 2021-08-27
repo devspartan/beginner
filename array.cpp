@@ -4393,7 +4393,7 @@ void findSumLength(vector<vector<int>> arr) {
 
     map<int, int> freq_2;
 
-      for (auto i : freq) {
+    for (auto i : freq) {
         if (freq[i.first] >= 2)
             freq_2[i.first] = freq[i.first];
     }
@@ -4414,6 +4414,20 @@ void findSumLength(vector<vector<int>> arr) {
         }
     }
     cout << summ;
+}
+
+int solve(long int n, long int g, long int b) {
+    long int cycles = n / (g + b);
+    long int remG = n % (g + b);
+
+    long int totalG = cycles * (g + b) - cycles * b + remG;
+
+    if (n <= totalG) {
+        return n;
+    } else if (n > totalG && totalG >= n / 2) {
+        return totalG;
+    }
+    return n;
 }
 
 int main() {
@@ -4444,7 +4458,7 @@ int main() {
 
     // printVect(vt);
 
-    findSumLength(ct);
+    cout << solve(5, 4, 4);
     // matrixRankTransform(ct);
     // stoneGame(vt);
     // cout << findPairs(vt, 0);
