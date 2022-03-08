@@ -1,9 +1,11 @@
 {
 	"files.associations": {
+		"*.js": "javascriptreact",
 		"cmath": "cpp",
 		"iostream": "cpp",
 		"ostream": "cpp",
-		"new": "cpp"
+		"new": "cpp",
+		"iosfwd": "cpp"
 	},
 	"C_Cpp.errorSquiggles": "Disabled"
 }

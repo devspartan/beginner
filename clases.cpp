@@ -2,93 +2,60 @@
 
 using namespace std;
 
-class NumArray {
-
+class B;
+class A {
   private:
-    vector<int> data;
-    vector<int> cummSum;
-    unordered_map<int, int> mp;
+    int a;
+    int b;
+    void printInPvt() { cout << "Pr int in a's pvt"; }
 
   public:
-    NumArray(vector<int> &nums) {
-        data = nums;
+    A();
+    A(int x, int y) {
+        a = x;
+        b = y;
+    };
 
-        if (nums.size() > 0) {
+    void showData() { cout << "A : " << a << " " << b << endl; }
+    int getSum() { return a + b; }
 
-            cummSum.push_back(nums[0]);
+    friend int sumAB(A, B);
 
-            for (int i = 1; i < nums.size(); i++) {
-                cummSum.push_back(cummSum[i - 1] + nums[i]);
-            }
-        }
-    }
-
-    void update(int index, int val) { mp[index] = val; }
-
-    int sumRange(int left, int right) {
-        int sum = 0;
-        int ext = 0;
-        for (auto it : mp) {
-            if (it.first >= left && it.first <= right) {
-                ext += it.second - data[it.first];
-            }
-        }
-        return cummSum[right] - cummSum[left] + data[left] + ext;
-    }
+    void helloB(B);
 };
 
-class RLEIterator {
+class B {
   private:
-    vector<int> encoded;
-    int currIdx;
-    int currNum;
+    int m;
+    int n;
 
   public:
-    RLEIterator(vector<int> &encoding) {
-        encoded = encoding;
-        currIdx = 0;
-    }
+    B();
+    B(int x, int y) {
+        m = x;
+        n = y;
+    };
 
-    int next(int n) {
+    friend class A;
+    void showData() { cout << "B : " << m << " " << n << endl; }
+    friend int sumAB(A a, B b) { return a.a + a.b + b.m + b.n; }
 
-        if (currIdx >= encoded.size()) {
-            return -1;
-        }
-
-        if (encoded[currIdx] > n) {
-            encoded[currIdx] -= n;
-            return encoded[currIdx + 1];
-        } else if (encoded[currIdx] == n) {
-            currIdx += 2;
-            return encoded[currIdx - 1];
-        } else {
-            int ct = 0;
-            int i = currIdx;
-            while (ct < n && currIdx < encoded.size()) {
-                ct += encoded[currIdx];
-                if (ct > n) {
-                    encoded[currIdx] = ct - n;
-                    return encoded[currIdx + 1];
-                } else if (ct == n) {
-                    currIdx += 2;
-                    return encoded[currIdx - 1];
-                }
-
-                currIdx += 2;
-            }
-
-            return -1;
-        }
-    }
+    void helloA(A hr) { cout << " Hello a "; }
 };
+
+void A::helloB(B qw) { cout << "Pvt of b: " << qw.m << " " << qw.n << endl; }
+
+// int sumAB(A a, B b){
+//     return a.a + a.b + b.m + b.n;
+// }
 
 int main() {
-    vector<int> nums = {3, 8, 0, 9, 5, 2, 3, 4, 1, 2, 1, 2};
 
-    RLEIterator rt(nums);
-    // [8, 8, 8, 2, 2, 2, 2, 2, 4, 4, 4, 2, 2]
-    cout << rt.next(4) << endl;
-    cout << rt.next(2) << endl;
-    cout << rt.next(4) << endl;
-    cout << rt.next(2) << endl;
+    A num1(3, 4);
+    B num2(1, 2);
+
+    num1.helloB(num2);
+    num1.showData();
+    num2.showData();
+    cout << sumAB(num1, num2) << endl;
 }

@@ -4416,18 +4416,77 @@ void findSumLength(vector<vector<int>> arr) {
     cout << summ;
 }
 
-int solve(long int n, long int g, long int b) {
-    long int cycles = n / (g + b);
-    long int remG = n % (g + b);
+long int util(vector<vector<int>> &arr, int i, int j, int k,
+              vector<vector<vector<long int>>> &dp) {
+    int m = arr.size();
+    int n = arr[0].size();
 
-    long int totalG = cycles * (g + b) - cycles * b + remG;
-
-    if (n <= totalG) {
-        return n;
-    } else if (n > totalG && totalG >= n / 2) {
-        return totalG;
+    if (i == m - 1 && j == n - 1) {
+        if (arr[i][j] == 1 && k < 0) {
+            return INT32_MAX;
+        }
+        return 0;
     }
-    return n;
+    if (i < 0 || j < 0 || i >= m || j >= n || arr[i][j] == -1) {
+        return INT32_MAX;
+    }
+
+    long int temp = arr[i][j];
+
+    if (k >= 0) {
+        if (dp[i][j][k] != -1) {
+            // cout << i << " " << j << " " << dp[i][j] << endl;
+            return dp[i][j][k];
+        }
+    }
+
+    arr[i][j] = -1;
+    long int t1 = INT32_MAX, t2 = INT32_MAX, t3 = INT32_MAX, t4 = INT32_MAX;
+    long int t5 = INT32_MAX, t6 = INT32_MAX, t7 = INT32_MAX, t8 = INT32_MAX;
+
+    if (i - 1 >= 0) {
+        if (arr[i - 1][j] == 1 && k > 0) {
+            t1 = util(arr, i - 1, j, k - 1, dp) + 1;
+        } else if (arr[i - 1][j] == 0) {
+            t2 = util(arr, i - 1, j, k, dp) + 1;
+        }
+    }
+    if (i + 1 < m) {
+        if (arr[i + 1][j] == 1 && k > 0) {
+            t3 = util(arr, i + 1, j, k - 1, dp) + 1;
+        } else if (arr[i + 1][j] == 0) {
+            t4 = util(arr, i + 1, j, k, dp) + 1;
+        }
+    }
+    if (j - 1 >= 0) {
+        if (arr[i][j - 1] == 1 && k > 0) {
+            t5 = util(arr, i, j - 1, k - 1, dp) + 1;
+        } else if (arr[i][j - 1] == 0) {
+            t6 = util(arr, i, j - 1, k, dp) + 1;
+        }
+    }
+    if (j + 1 < n) {
+        if (arr[i][j + 1] == 1 && k > 0) {
+            t7 = util(arr, i, j + 1, k - 1, dp) + 1;
+        } else if (arr[i][j + 1] == 0) {
+            t8 = util(arr, i, j + 1, k, dp) + 1;
+        }
+    }
+    arr[i][j] = temp;
+
+    long int res1 = min(min(t1, t2), min(t3, t4));
+    long int res2 = min(min(t5, t6), min(t7, t8));
+    long int res = min(res1, res2);
+
+    if (k >= 0) {
+        if (dp[i][j][k] == -1 || res < dp[i][j][k]) {
+            if (res < 2147483646) {
+                dp[i][j][k] = res;
+            }
+        }
+    }
+
+    return res;
 }
 
 int main() {
